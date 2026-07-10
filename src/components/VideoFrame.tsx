@@ -11,11 +11,14 @@ export default function VideoFrame({
   poster,
   className = "",
   tint = true,
+  rate = 1,
 }: {
   src: string;
   poster: string;
   className?: string;
   tint?: boolean;
+  /** Playback speed multiplier (e.g. 0.5 = half speed). */
+  rate?: number;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
@@ -23,12 +26,13 @@ export default function VideoFrame({
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+    v.playbackRate = rate;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       v.pause();
       return;
     }
     v.play().catch(() => {});
-  }, []);
+  }, [rate]);
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -42,7 +46,10 @@ export default function VideoFrame({
         loop
         playsInline
         preload="metadata"
-        onCanPlay={() => setReady(true)}
+        onCanPlay={(e) => {
+          e.currentTarget.playbackRate = rate;
+          setReady(true);
+        }}
       />
       {tint && (
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-walnut/25 via-transparent to-transparent" />

@@ -4,19 +4,44 @@ import * as THREE from "three";
 export const SPECIES_COLOR: Record<string, string> = {
   "Teak Wood": "#8a5a2e",
   Teak: "#8a5a2e",
-  "White Teak": "#c7a878",
+  "White Teak": "#d6c6a4",
   "Neem Wood": "#9c854f",
   Neem: "#9c854f",
 };
 
 export const SPECIES = [
   { key: "Teak Wood", color: "#8a5a2e" },
-  { key: "White Teak", color: "#c7a878" },
+  { key: "White Teak", color: "#d6c6a4" },
   { key: "Neem Wood", color: "#9c854f" },
 ] as const;
 
 export function speciesColor(name: string): string {
   return SPECIES_COLOR[name] ?? "#9a7448";
+}
+
+/* ------------------------------------------------------------------ */
+/*  Per-species grain character                                        */
+/*  Teak: dense dark grain, high contrast.                             */
+/*  White teak: pale base, sparse fine grain, cloudy white patches.    */
+/*  Neem: medium, warm-tan streaky.                                    */
+/* ------------------------------------------------------------------ */
+export interface WoodProfile {
+  base: string; // canvas base fill (material colour still multiplies this)
+  bands: number; // broad tonal bands
+  streaks: number; // fine fibre streak count
+  streakDark: number; // 0..1 how dark the streaks are
+  cathedral: number; // strength of the arch figure (0 = none)
+  patches: number; // pale cloudy blotches (white teak)
+}
+
+const PROFILES: Record<string, WoodProfile> = {
+  "Teak Wood": { base: "#c3a373", bands: 7, streaks: 320, streakDark: 1, cathedral: 1, patches: 0 },
+  "White Teak": { base: "#ded0b6", bands: 3, streaks: 90, streakDark: 0.4, cathedral: 0.35, patches: 7 },
+  "Neem Wood": { base: "#cbb488", bands: 5, streaks: 200, streakDark: 0.7, cathedral: 0.6, patches: 0 },
+};
+
+export function woodProfile(name: string): WoodProfile {
+  return PROFILES[name] ?? PROFILES["Neem Wood"];
 }
 
 function prng(seed: number) {
@@ -45,22 +70,23 @@ function toTexture(c: HTMLCanvasElement, srgb: boolean): THREE.Texture {
 /* ------------------------------------------------------------------ */
 /*  Flat-sawn face — long fibre streaks + cathedral figure            */
 /* ------------------------------------------------------------------ */
-export function makeWoodTexture(seed: number): THREE.Texture {
+export function makeWoodTexture(seed: number, species?: string): THREE.Texture {
   const { c, ctx, size } = makeCanvas();
   const rnd = prng(seed);
+  const p = species ? woodProfile(species) : PROFILES["Teak Wood"];
 
-  // warm neutral base (species colour multiplies this)
-  ctx.fillStyle = "#c3a373";
+  // species base tone (material colour still multiplies this)
+  ctx.fillStyle = p.base;
   ctx.fillRect(0, 0, size, size);
 
   // broad low-frequency tonal bands along the grain
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < p.bands; i++) {
     const y = rnd() * size;
     const h = 30 + rnd() * 90;
     const dark = rnd() > 0.5;
     const g = ctx.createLinearGradient(0, y - h, 0, y + h);
-    const a = 0.06 + rnd() * 0.08;
-    const col = dark ? `rgba(70,45,22,${a})` : `rgba(224,196,150,${a})`;
+    const a = (0.06 + rnd() * 0.08) * (dark ? p.streakDark : 1);
+    const col = dark ? `rgba(70,45,22,${a})` : `rgba(232,214,178,${a})`;
     g.addColorStop(0, "rgba(0,0,0,0)");
     g.addColorStop(0.5, col);
     g.addColorStop(1, "rgba(0,0,0,0)");
@@ -68,26 +94,43 @@ export function makeWoodTexture(seed: number): THREE.Texture {
     ctx.fillRect(0, y - h, size, h * 2);
   }
 
-  // cathedral figure — nested arches near the centre
-  const cx = size * (0.3 + rnd() * 0.4);
-  for (let a = 0; a < 5; a++) {
-    const spread = 26 + a * 20 + rnd() * 8;
-    ctx.strokeStyle = `rgba(75,48,24,${0.18 - a * 0.02})`;
-    ctx.lineWidth = 1 + rnd() * 1.5;
+  // pale cloudy patches — the "white patch" character of white teak
+  for (let i = 0; i < p.patches; i++) {
+    const bx = rnd() * size;
+    const by = rnd() * size;
+    const br = 40 + rnd() * 120;
+    const g = ctx.createRadialGradient(bx, by, 4, bx, by, br);
+    const a = 0.22 + rnd() * 0.28;
+    g.addColorStop(0, `rgba(244,238,224,${a})`);
+    g.addColorStop(1, "rgba(244,238,224,0)");
+    ctx.fillStyle = g;
     ctx.beginPath();
-    for (let x = -20; x <= size + 20; x += 10) {
-      const dx = x - cx;
-      const y = size * 0.55 - Math.exp(-(dx * dx) / (2 * spread * spread)) * (90 + a * 26);
-      x === -20 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    ctx.ellipse(bx, by, br, br * (0.5 + rnd() * 0.4), rnd() * Math.PI, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // cathedral figure — nested arches near the centre
+  if (p.cathedral > 0) {
+    const cx = size * (0.3 + rnd() * 0.4);
+    for (let a = 0; a < 5; a++) {
+      const spread = 26 + a * 20 + rnd() * 8;
+      ctx.strokeStyle = `rgba(75,48,24,${(0.18 - a * 0.02) * p.cathedral})`;
+      ctx.lineWidth = 1 + rnd() * 1.5;
+      ctx.beginPath();
+      for (let x = -20; x <= size + 20; x += 10) {
+        const dx = x - cx;
+        const y = size * 0.55 - Math.exp(-(dx * dx) / (2 * spread * spread)) * (90 + a * 26);
+        x === -20 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
   }
 
   // fine fibre streaks running the length (U axis)
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < p.streaks; i++) {
     const y = rnd() * size;
     const shade = 55 + rnd() * 60;
-    const a = 0.05 + rnd() * 0.2;
+    const a = (0.05 + rnd() * 0.2) * p.streakDark;
     ctx.strokeStyle = `rgba(${shade},${shade * 0.62},${shade * 0.34},${a})`;
     ctx.lineWidth = 0.4 + rnd() * 1.4;
     ctx.beginPath();

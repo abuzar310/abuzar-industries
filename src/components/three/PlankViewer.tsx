@@ -27,7 +27,7 @@ function Plank({
   autoRotate: boolean;
 }) {
   const ref = useRef<THREE.Group>(null);
-  const longTex = useMemo(() => makeWoodTexture(species.length + 7), [species]);
+  const longTex = useMemo(() => makeWoodTexture(species.length + 7, species), [species]);
   const endTex = useMemo(() => makeEndGrainTexture(species.length + 19), [species]);
   const mask = useMemo(() => endFaceMask("x"), []);
 

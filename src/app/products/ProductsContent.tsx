@@ -146,6 +146,7 @@ export default function ProductsContent() {
                         poster={p.videoPoster ?? p.image}
                         className="h-full w-full"
                         tint={false}
+                        rate={0.5}
                       />
                     ) : (
                       <PlankViewer

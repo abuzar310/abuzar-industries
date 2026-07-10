@@ -59,8 +59,9 @@ function Plank({
 function TimberStack({ reduced }: { reduced: boolean }) {
   const group = useRef<THREE.Group>(null);
 
-  const longTex = useMemo(() => [makeWoodTexture(3), makeWoodTexture(17), makeWoodTexture(41)], []);
-  const endTex = useMemo(() => [makeEndGrainTexture(5), makeEndGrainTexture(23), makeEndGrainTexture(59)], []);
+  // one texture per species so teak / white teak / neem read distinctly
+  const longTex = useMemo(() => SPECIES.map((s) => makeWoodTexture(s.key.length + 7, s.key)), []);
+  const endTex = useMemo(() => SPECIES.map((_, i) => makeEndGrainTexture(11 + i * 13)), []);
 
   const planks = useMemo(() => {
     const L = 3.0;
@@ -95,8 +96,9 @@ function TimberStack({ reduced }: { reduced: boolean }) {
       const y = -totalH / 2 + T / 2 + l * (T + GY);
       for (let p = 0; p < PER; p++) {
         const offset = -spanW / 2 + W / 2 + p * (W + GX);
-        const sp = SPECIES[(l + p) % SPECIES.length];
-        const ti = (l * 2 + p) % 3;
+        const spIdx = (l + p) % SPECIES.length;
+        const sp = SPECIES[spIdx];
+        const ti = spIdx; // texture matches the plank's species
         // small imperfections so it reads like a real hand-made stack
         const jx = (rnd() - 0.5) * 0.05;
         const jz = (rnd() - 0.5) * 0.05;
