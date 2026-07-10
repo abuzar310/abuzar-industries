@@ -1,8 +1,33 @@
 "use client";
 
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { MessageCircle, Ruler, Truck, BadgeIndianRupee, ShieldCheck } from "lucide-react";
+import VideoFrame from "@/components/VideoFrame";
+import {
+  MessageCircle,
+  Ruler,
+  Truck,
+  BadgeIndianRupee,
+  ShieldCheck,
+  Box,
+  ImageIcon,
+} from "lucide-react";
+
+const PlankViewer = dynamic(() => import("@/components/three/PlankViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center bg-panel/40">
+      <span className="relative flex h-8 w-8">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ochre/30" />
+        <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-ochre/15">
+          <Box size={16} className="text-ochre" />
+        </span>
+      </span>
+    </div>
+  ),
+});
 
 const PHONE = "919845378626";
 
@@ -10,6 +35,10 @@ const products = [
   {
     name: "Premium Teak Wood Planks",
     image: "/images/1.jpg",
+    video: "/videos/plank-teak.mp4",
+    videoPoster: "/plank-teak-poster.jpg",
+    species: "Teak Wood",
+    dims: { l: 96, w: 8, t: 2 }, // 8' × 8" × 2" in inches
     sizes: ['2" × 6" × 6\'', '2" × 8" × 8\'', "Custom sizes available"],
     price: "₹4,000",
     unit: "per cubic foot",
@@ -19,6 +48,10 @@ const products = [
   {
     name: "White Teak Wood Planks",
     image: "/images/2.jpg",
+    video: "/videos/plank-white-teak.mp4",
+    videoPoster: "/plank-white-teak-poster.jpg",
+    species: "White Teak",
+    dims: { l: 96, w: 6, t: 2 },
     sizes: ['1.5" × 6" × 6\'', '2" × 6" × 8\'', "Custom sizes available"],
     price: "₹2,800",
     unit: "per cubic foot",
@@ -28,6 +61,10 @@ const products = [
   {
     name: "Neem Wood Planks",
     image: "/images/3.jpg",
+    video: null as string | null,
+    videoPoster: null as string | null,
+    species: "Neem Wood",
+    dims: { l: 72, w: 6, t: 2 },
     sizes: ['1" × 4" × 6\'', '2" × 6" × 8\'', "Custom sizes available"],
     price: "₹1,500",
     unit: "per cubic foot",
@@ -60,6 +97,7 @@ const whyUs = [
 ];
 
 export default function ProductsContent() {
+  const [view3d, setView3d] = useState<string | null>(null);
   return (
     <div className="pt-24 pb-16">
       {/* Header */}
@@ -99,17 +137,58 @@ export default function ProductsContent() {
                 transition={{ delay: i * 0.1 }}
                 className="group rounded-2xl bg-paper border border-walnut/5 hover:border-ochre/20 hover:shadow-xl hover:shadow-ochre/5 transition-all duration-300 overflow-hidden"
               >
-                {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={p.image}
-                    alt={p.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                {/* Image / 3D */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-panel/60 to-ochre-soft/20">
+                  {view3d === p.name ? (
+                    p.video ? (
+                      <VideoFrame
+                        src={p.video}
+                        poster={p.videoPoster ?? p.image}
+                        className="h-full w-full"
+                        tint={false}
+                      />
+                    ) : (
+                      <PlankViewer
+                        length={p.dims.l}
+                        width={p.dims.w}
+                        thickness={p.dims.t}
+                        species={p.species}
+                        autoRotate
+                      />
+                    )
+                  ) : (
+                    <Image
+                      src={p.image}
+                      alt={p.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
+
                   <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-paper/90 backdrop-blur-sm text-ochre text-[10px] font-bold tracking-wider uppercase">
                     {p.tag}
                   </div>
+
+                  {/* 3D / photo toggle */}
+                  <button
+                    onClick={() =>
+                      setView3d((cur) => (cur === p.name ? null : p.name))
+                    }
+                    className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full border border-walnut/10 bg-paper/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-walnut backdrop-blur-sm transition-colors hover:bg-paper"
+                    aria-label={view3d === p.name ? "Show photo" : "View in 3D"}
+                  >
+                    {view3d === p.name ? (
+                      <>
+                        <ImageIcon size={13} className="text-ochre" />
+                        Photo
+                      </>
+                    ) : (
+                      <>
+                        <Box size={13} className="text-ochre" />
+                        {p.video ? "Live View" : "View 3D"}
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 <div className="p-6">

@@ -55,6 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${display.variable} ${sans.variable} ${mono.variable} scroll-smooth`}
     >
       <body className="min-h-dvh flex flex-col antialiased">

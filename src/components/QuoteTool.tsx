@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, Send, Calculator, RotateCcw } from "lucide-react";
+import VideoFrame from "./VideoFrame";
 
 interface Row {
   id: number;
@@ -86,8 +87,19 @@ export default function QuoteTool() {
   };
 
   return (
-    <section id="quote" className="py-24 sm:py-32 bg-panel/50 relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="quote" className="py-24 sm:py-32 bg-panel/50 relative overflow-hidden">
+      {/* ambient grain-macro backdrop */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.12]">
+        <VideoFrame
+          src="/videos/grain-macro.mp4"
+          poster="/grain-macro-poster.jpg"
+          className="h-full w-full"
+          tint={false}
+        />
+        <div className="absolute inset-0 bg-panel/60" />
+      </div>
+
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

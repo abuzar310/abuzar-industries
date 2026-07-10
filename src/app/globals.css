@@ -51,6 +51,32 @@ html {
   background-size: 22px 22px;
 }
 
+/* Frosted glass panel */
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(243, 236, 224, 0.35));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Subtle 3D lift-and-tilt on hover (respects reduced motion) */
+.tilt-3d {
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-3d:hover {
+  transform: perspective(900px) rotateX(3.5deg) translateY(-6px);
+  box-shadow: 0 30px 60px -30px rgba(90, 61, 36, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt-3d,
+  .tilt-3d:hover {
+    transform: none;
+  }
+}
+
 /* Grain texture overlay */
 .grain-overlay::after {
   content: '';

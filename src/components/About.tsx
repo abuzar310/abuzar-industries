@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Shield, Users, Leaf, TrendingUp } from "lucide-react";
+import VideoFrame from "./VideoFrame";
 
 const stats = [
   { icon: Shield, value: "30+", label: "Years Experience" },
@@ -25,23 +26,23 @@ export default function About() {
             viewport={{ once: true, margin: "-80px" }}
             className="relative"
           >
-            <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-walnut/10 via-panel to-ochre/10 border border-walnut/5 overflow-hidden relative flex items-center justify-center">
-              <div className="absolute inset-0 bg-pattern opacity-50" />
-              <div className="relative z-10 text-center px-8">
-                <div className="w-20 h-20 rounded-2xl bg-walnut flex items-center justify-center mx-auto mb-4">
-                  <span className="text-paper font-[family:var(--font-display)] font-bold text-3xl">
-                    AI
-                  </span>
-                </div>
-                <p className="font-[family:var(--font-display)] font-bold text-2xl text-walnut">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-walnut/5">
+              <VideoFrame
+                src="/videos/timber-yard.mp4"
+                poster="/timber-yard-poster.jpg"
+                className="h-full w-full"
+              />
+              {/* caption over the footage */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6">
+                <p className="font-[family:var(--font-display)] font-bold text-2xl text-paper drop-shadow">
                   Since 1995
                 </p>
-                <p className="text-sm text-ink-soft/70 mt-1">
+                <p className="text-sm text-paper/85 mt-0.5 drop-shadow">
                   Three generations of timber expertise
                 </p>
               </div>
-              <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-ochre/30 rounded-tl-xl" />
-              <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-ochre/30 rounded-br-xl" />
+              <div className="pointer-events-none absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-paper/40 rounded-tl-xl" />
+              <div className="pointer-events-none absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-paper/40 rounded-br-xl" />
             </div>
 
             {/* Owner cards */}

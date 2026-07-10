@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   Calculator,
@@ -9,7 +10,23 @@ import {
   Send,
   FileSpreadsheet,
   User,
+  Box,
+  Move3d,
 } from "lucide-react";
+
+const PlankViewer = dynamic(() => import("@/components/three/PlankViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <span className="relative flex h-8 w-8">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ochre/30" />
+        <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-ochre/15">
+          <Box size={16} className="text-ochre" />
+        </span>
+      </span>
+    </div>
+  ),
+});
 
 const PHONE = "919845378626";
 
@@ -43,6 +60,7 @@ export default function CalculatorContent() {
     { id: 1, type: "Teak Wood", length: "", width: "", thickness: "", qty: "1" },
   ]);
   const [nextId, setNextId] = useState(2);
+  const [activeId, setActiveId] = useState(1);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -50,12 +68,14 @@ export default function CalculatorContent() {
   const clean = (v: string) =>
     v.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
 
-  const update = (id: number, key: keyof Item, v: string) =>
+  const update = (id: number, key: keyof Item, v: string) => {
+    setActiveId(id);
     setItems((arr) =>
       arr.map((it) =>
         it.id === id ? { ...it, [key]: key === "type" ? v : clean(v) } : it,
       ),
     );
+  };
 
   const addRow = () => {
     setItems((arr) => [
@@ -75,6 +95,17 @@ export default function CalculatorContent() {
   const totalCft = items.reduce((s, it) => s + cftOf(it), 0);
   const totalEst = items.reduce((s, it) => s + cftOf(it) * rateOf(it.type), 0);
   const hasData = items.some((it) => cftOf(it) > 0);
+
+  // active row → live 3D preview (length in ft, width/thickness in inches)
+  const active = items.find((it) => it.id === activeId) ?? items[0];
+  const aL = parseFloat(active.length) || 0;
+  const aW = parseFloat(active.width) || 0;
+  const aT = parseFloat(active.thickness) || 0;
+  const hasDims = aL > 0 && aW > 0 && aT > 0;
+  const viewL = hasDims ? aL * 12 : 72; // → inches, matches width/thickness
+  const viewW = hasDims ? aW : 6;
+  const viewT = hasDims ? aT : 2;
+  const activeCft = cftOf(active);
 
   const sendWhatsApp = () => {
     let msg = `🏗️ *TIMBER REQUIREMENT REQUEST*\n\n`;
@@ -152,6 +183,77 @@ export default function CalculatorContent() {
                 </span>
               </div>
             ))}
+          </motion.div>
+
+          {/* Live 3D preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="grid gap-5 overflow-hidden rounded-2xl border border-walnut/5 bg-gradient-to-br from-panel/70 via-paper to-ochre-soft/25 shadow-lg shadow-walnut/5 sm:grid-cols-[1.4fr_1fr]"
+          >
+            {/* 3D stage */}
+            <div className="relative min-h-[240px] sm:min-h-[300px]">
+              <PlankViewer
+                length={viewL}
+                width={viewW}
+                thickness={viewT}
+                species={active.type}
+                autoRotate
+              />
+              <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-walnut/10 bg-paper/80 px-2.5 py-1 backdrop-blur-md">
+                <Move3d size={12} className="text-ochre" />
+                <span className="font-mono text-[10px] font-medium uppercase tracking-widest text-ink-soft">
+                  Drag to rotate
+                </span>
+              </div>
+              {!hasDims && (
+                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-paper/80 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-ink-soft/60 backdrop-blur-md">
+                  Sample plank — enter sizes below
+                </div>
+              )}
+            </div>
+
+            {/* Live readout */}
+            <div className="flex flex-col justify-center gap-4 p-6 sm:p-7">
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft/50">
+                  Live preview
+                </span>
+                <h3 className="font-[family:var(--font-display)] text-2xl font-bold text-walnut">
+                  {active.type}
+                </h3>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { l: "Length", v: aL ? `${aL}` : "—", u: "ft" },
+                  { l: "Width", v: aW ? `${aW}` : "—", u: "in" },
+                  { l: "Thick", v: aT ? `${aT}` : "—", u: "in" },
+                ].map((d) => (
+                  <div
+                    key={d.l}
+                    className="rounded-xl border border-walnut/10 bg-paper/70 px-3 py-2.5 text-center"
+                  >
+                    <div className="text-[9px] font-semibold uppercase tracking-wider text-ink-soft/50">
+                      {d.l}
+                    </div>
+                    <div className="font-mono text-lg font-semibold text-walnut leading-tight">
+                      {d.v}
+                      <span className="ml-0.5 text-[10px] text-ink-soft/50">{d.u}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-walnut/5 to-ochre/10 px-4 py-3">
+                <span className="text-xs font-medium uppercase tracking-wider text-ink-soft/70">
+                  This piece
+                </span>
+                <span className="font-[family:var(--font-display)] text-2xl font-bold text-ochre leading-none">
+                  {activeCft.toFixed(2)}
+                  <span className="ml-1 text-xs text-ink-soft/60">cft</span>
+                </span>
+              </div>
+            </div>
           </motion.div>
 
           {/* Calculation sheet */}

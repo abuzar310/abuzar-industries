@@ -42,3 +42,7 @@ next-env.d.ts
 
 # claude local settings
 .claude/
+
+# raw AI-generated video originals (clean-named copies are committed instead)
+public/videos/Cinematic_*
+public/videos/*_202607110017.mp4
