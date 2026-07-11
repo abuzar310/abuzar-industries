@@ -65,9 +65,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:info@abuzarindustries.in" className="inline-flex items-center gap-3 text-paper/65 hover:text-ochre transition-colors duration-300">
+                <a href="mailto:abuzarindustries@gmail.com" className="inline-flex items-center gap-3 text-paper/65 hover:text-ochre transition-colors duration-300">
                   <Mail size={15} className="shrink-0 text-ochre" strokeWidth={1.75} />
-                  info@abuzarindustries.in
+                  abuzarindustries@gmail.com
                 </a>
               </li>
             </ul>

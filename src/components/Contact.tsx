@@ -7,7 +7,7 @@ const PHONE = "+919845378626";
 
 const contacts = [
   { icon: Phone, label: "Call Us", value: "+91 98453 78626", href: "tel:+919845378626" },
-  { icon: Mail, label: "Email", value: "info@abuzarindustries.in", href: "mailto:info@abuzarindustries.in" },
+  { icon: Mail, label: "Email", value: "abuzarindustries@gmail.com", href: "mailto:abuzarindustries@gmail.com" },
   { icon: MapPin, label: "Our Yard", value: "KSSIDC Industrial Area, DVG Road, Chitradurga · Mon–Sat 9AM–7PM", href: "https://maps.google.com/?q=14.2264826,76.3863472" },
   { icon: Clock, label: "WhatsApp", value: "Quick replies within minutes", href: `https://wa.me/919845378626` },
 ];
