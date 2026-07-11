@@ -86,3 +86,335 @@ html {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   pointer-events: none;
 }
+
+/* ============================================================
+   QUOTATION SHEET — office editor format (matches the books app)
+   ============================================================ */
+.qsheet {
+  max-width: 794px; /* A4 @96dpi */
+  margin: 0 auto;
+  font-size: 13px;
+  color: var(--ink);
+}
+.qsheet input { outline: none; }
+.qsheet input::placeholder { color: rgba(110, 94, 78, 0.35); }
+
+/* -- masthead card -- */
+.qh-card {
+  background: var(--paper);
+  border: 1.5px solid rgba(90, 61, 36, 0.25);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.qh-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px 12px;
+}
+.qh-logo { width: 64px; height: 64px; object-fit: contain; }
+.qh-name {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.qh-name h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1;
+}
+.qh-chip {
+  border: 1.5px solid var(--ochre);
+  color: var(--ochre);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 12px;
+  text-transform: uppercase;
+}
+.qh-sub { font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft); margin-top: 5px; }
+.qh-sub b { color: var(--ink); font-weight: 600; }
+.qh-web { color: var(--ochre); font-weight: 600; letter-spacing: 0.02em; }
+
+.qh-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid rgba(90, 61, 36, 0.18);
+}
+.qh-meta3 { grid-template-columns: 1.2fr 1fr 1fr; }
+.qh-cell { padding: 10px 20px 12px; }
+.qh-cell + .qh-cell { border-left: 1px solid rgba(90, 61, 36, 0.18); }
+.qh-lab {
+  display: block;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ochre);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.qh-val { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--ink); }
+.qh-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0;
+}
+
+/* -- wood section card -- */
+.qsec {
+  background: var(--paper);
+  border: 1.5px solid rgba(90, 61, 36, 0.25);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 14px;
+  max-width: 460px;
+}
+.qsec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--walnut);
+  color: var(--paper);
+  padding: 8px 12px;
+}
+.qsec-name {
+  background: transparent;
+  border: none;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  width: 110px;
+  min-width: 60px;
+}
+.qsec-pcs { font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+.qsec-pcs b { font-family: var(--font-mono); font-size: 13px; margin-left: 5px; opacity: 1; }
+.qsec-modes { margin-left: auto; display: flex; gap: 3px; }
+.qsec-mode {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 7px;
+  color: rgba(250, 246, 239, 0.75);
+  cursor: pointer;
+  border: 1px solid rgba(250, 246, 239, 0.25);
+}
+.qsec-mode.on { background: var(--paper); color: var(--walnut); border-color: var(--paper); }
+.qsec-x {
+  color: rgba(250, 246, 239, 0.6);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.qsec-x:hover { background: rgba(0, 0, 0, 0.2); color: #fff; }
+
+.qsec table { width: 100%; border-collapse: collapse; }
+.qsec thead th {
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 4px 5px;
+  border-bottom: 1px solid rgba(90, 61, 36, 0.15);
+  line-height: 1.35;
+}
+.qsec thead th small { display: block; font-size: 7.5px; color: rgba(110, 94, 78, 0.65); }
+.qsec tbody td {
+  text-align: center;
+  padding: 3px 4px;
+  border-bottom: 1px solid rgba(90, 61, 36, 0.08);
+}
+.qsec tbody tr:last-child td { border-bottom: none; }
+.q-idx { font-family: var(--font-mono); font-size: 10.5px; color: rgba(110, 94, 78, 0.6); width: 26px; }
+.q-cft { font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: var(--ink); width: 62px; white-space: nowrap; }
+.q-in {
+  width: 52px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed rgba(90, 61, 36, 0.18);
+  padding: 4px 2px;
+}
+.q-in:focus { border-bottom-color: var(--ochre); background: rgba(185, 119, 46, 0.05); }
+.q-rowx {
+  color: rgba(163, 59, 42, 0.45);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  width: 26px;
+}
+.q-rowx:hover { color: var(--danger); background: rgba(163, 59, 42, 0.08); }
+
+.qsec-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1.5px dashed rgba(90, 61, 36, 0.25);
+  padding: 10px 12px;
+}
+.q-addline {
+  border: 1.5px dashed rgba(90, 61, 36, 0.35);
+  border-radius: 9px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  padding: 8px 10px;
+  cursor: pointer;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.q-addline:hover { border-color: var(--ochre); color: var(--ochre); }
+.qf-lab {
+  display: block;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.qf-val { font-family: var(--font-mono); font-weight: 700; font-size: 15px; }
+.q-rate {
+  width: 74px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(90, 61, 36, 0.4);
+  padding: 2px;
+}
+.q-rate:focus { border-bottom-color: var(--ochre); }
+.qf-price { margin-left: auto; text-align: right; }
+.qf-price .qf-val { font-size: 16px; }
+
+/* -- add wood type -- */
+.q-addwood {
+  width: 100%;
+  max-width: 460px;
+  margin-top: 14px;
+  border: 1.5px dashed rgba(90, 61, 36, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: center;
+}
+.q-addwood:hover { border-color: var(--ochre); color: var(--ochre); }
+
+/* -- totals card -- */
+.q-totals {
+  background: var(--paper);
+  border: 1.5px solid rgba(90, 61, 36, 0.25);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 18px;
+}
+.qt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 18px;
+  border-bottom: 1px solid rgba(90, 61, 36, 0.12);
+}
+.qt-row .qt-lab {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.qt-row .qt-val { font-family: var(--font-mono); font-weight: 600; font-size: 14px; }
+.qt-gstin {
+  width: 46px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(90, 61, 36, 0.4);
+  padding: 2px;
+}
+.qt-gstin:focus { border-bottom-color: var(--ochre); }
+.q-switch {
+  position: relative;
+  width: 34px;
+  height: 19px;
+  border-radius: 999px;
+  background: rgba(90, 61, 36, 0.25);
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.q-switch::after {
+  content: "";
+  position: absolute;
+  top: 2.5px; left: 3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.q-switch.on { background: var(--green); }
+.q-switch.on::after { transform: translateX(14px); }
+.qt-grand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--walnut);
+  color: var(--paper);
+  padding: 14px 18px;
+}
+.qt-grand .qt-lab {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.qt-grand .qt-val { font-family: var(--font-display); font-weight: 700; font-size: 26px; }
+.q-words { margin: 12px 2px 0; font-size: 12px; color: var(--ink-soft); font-style: italic; }
+.q-words b { color: var(--ink); }
+
+/* two-up section layout on wide screens (like the office canvas) */
+@media (min-width: 900px) {
+  .qsec-grid { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+  .qsec-grid .qsec { margin-top: 0; flex: 0 1 calc(50% - 7px); }
+}
+
+/* -- print: the sheet only, exactly as on screen -- */
+@media print {
+  body { background: #fff; }
+  body * { visibility: hidden; }
+  #qprint, #qprint * { visibility: visible; }
+  #qprint { position: absolute; top: 0; left: 0; right: 0; padding: 0; }
+  .no-print { display: none !important; }
+  .qsheet { max-width: 100%; }
+  .qh-card, .qsec, .q-totals { break-inside: avoid; border-radius: 10px; }
+  .q-in, .q-rate, .qt-gstin, .qsec-name, .qh-input { border-bottom-color: transparent !important; }
+  .qsec-head, .qt-grand {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page { size: A4; margin: 10mm; }
+}

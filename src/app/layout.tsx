@@ -46,6 +46,7 @@ export const metadata: Metadata = {
     siteName: "Abuzar Industries",
     type: "website",
     locale: "en_IN",
+    images: [{ url: "/images/logo-brand-og.png", width: 1200, height: 1200, alt: "Abuzar Industries" }],
   },
 };
 

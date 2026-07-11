@@ -20,10 +20,13 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Brand */}
-          <a href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg bg-walnut flex items-center justify-center text-paper font-[family:var(--font-display)] font-bold text-sm tracking-wider group-hover:bg-ochre transition-colors">
-              AI
-            </div>
+          <a href="/" className="flex items-center gap-2.5 group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo-brand-512.png"
+              alt="Abuzar Industries"
+              className="w-10 h-10 object-contain transition-transform group-hover:scale-105"
+            />
             <span className="font-[family:var(--font-display)] font-bold text-xl tracking-wide text-walnut">
               Abuzar <span className="text-ochre">Industries</span>
             </span>

@@ -4,14 +4,14 @@ import * as THREE from "three";
 export const SPECIES_COLOR: Record<string, string> = {
   "Teak Wood": "#8a5a2e",
   Teak: "#8a5a2e",
-  "White Teak": "#d6c6a4",
+  "White Teak": "#ccb789",
   "Neem Wood": "#9c854f",
   Neem: "#9c854f",
 };
 
 export const SPECIES = [
   { key: "Teak Wood", color: "#8a5a2e" },
-  { key: "White Teak", color: "#d6c6a4" },
+  { key: "White Teak", color: "#ccb789" },
   { key: "Neem Wood", color: "#9c854f" },
 ] as const;
 
@@ -36,7 +36,7 @@ export interface WoodProfile {
 
 const PROFILES: Record<string, WoodProfile> = {
   "Teak Wood": { base: "#c3a373", bands: 7, streaks: 320, streakDark: 1, cathedral: 1, patches: 0 },
-  "White Teak": { base: "#ded0b6", bands: 3, streaks: 90, streakDark: 0.4, cathedral: 0.35, patches: 7 },
+  "White Teak": { base: "#cdba90", bands: 4, streaks: 150, streakDark: 0.55, cathedral: 0.4, patches: 4 },
   "Neem Wood": { base: "#cbb488", bands: 5, streaks: 200, streakDark: 0.7, cathedral: 0.6, patches: 0 },
 };
 
@@ -100,9 +100,9 @@ export function makeWoodTexture(seed: number, species?: string): THREE.Texture {
     const by = rnd() * size;
     const br = 40 + rnd() * 120;
     const g = ctx.createRadialGradient(bx, by, 4, bx, by, br);
-    const a = 0.22 + rnd() * 0.28;
-    g.addColorStop(0, `rgba(244,238,224,${a})`);
-    g.addColorStop(1, "rgba(244,238,224,0)");
+    const a = 0.14 + rnd() * 0.16;
+    g.addColorStop(0, `rgba(230,218,192,${a})`);
+    g.addColorStop(1, "rgba(230,218,192,0)");
     ctx.fillStyle = g;
     ctx.beginPath();
     ctx.ellipse(bx, by, br, br * (0.5 + rnd() * 0.4), rnd() * Math.PI, 0, Math.PI * 2);

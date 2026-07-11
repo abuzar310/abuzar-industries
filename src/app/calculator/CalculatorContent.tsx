@@ -1,475 +1,397 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Printer, Send, X, Menu } from "lucide-react";
 import {
-  Calculator,
-  Plus,
-  Trash2,
-  Send,
-  FileSpreadsheet,
-  User,
-  Box,
-  Move3d,
-} from "lucide-react";
-
-const PlankViewer = dynamic(() => import("@/components/three/PlankViewer"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center">
-      <span className="relative flex h-8 w-8">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ochre/30" />
-        <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-ochre/15">
-          <Box size={16} className="text-ochre" />
-        </span>
-      </span>
-    </div>
-  ),
-});
+  cft as cftCalc,
+  inr,
+  todayStr,
+  peekQuotationNo,
+  commitQuotationNo,
+  rupeesInWords,
+} from "@/lib/quote";
 
 const PHONE = "919845378626";
 
-const WOODS = [
-  { name: "Teak Wood", rate: 4000 },
-  { name: "White Teak", rate: 2800 },
-  { name: "Neem Wood", rate: 1500 },
-] as const;
-
-interface Item {
+interface Row {
   id: number;
-  type: string;
-  length: string;
-  width: string;
-  thickness: string;
-  qty: string;
+  l: string;
+  w: string;
+  t: string;
+  pcs: string;
 }
 
-const cftOf = (it: Item) => {
-  const l = parseFloat(it.length) || 0;
-  const w = parseFloat(it.width) || 0;
-  const t = parseFloat(it.thickness) || 0;
-  const q = parseInt(it.qty) || 0;
-  return (l * w * t * q) / 144;
-};
+interface Section {
+  id: number;
+  wood: string;
+  rate: string;
+  rows: Row[];
+}
 
-const rateOf = (type: string) => WOODS.find((w) => w.name === type)?.rate ?? 0;
+/** Editable columns (the left "CFT" column is always computed from L×W×T×Pcs). */
+const COLS: { key: keyof Row; label: string; sub: string }[] = [
+  { key: "l", label: "L", sub: "ft" },
+  { key: "w", label: "W", sub: "inch" },
+  { key: "t", label: "T", sub: "inch" },
+  { key: "pcs", label: "Pcs", sub: "qty" },
+];
+
+const WOOD_RATES: Record<string, number> = {
+  "Teak Wood": 4000,
+  "White Teak": 2800,
+  "Neem Wood": 1000,
+};
+const WOOD_CYCLE = ["Teak Wood", "White Teak", "Neem Wood"];
+
+/** One line's CFT: (L ft × W in × T in × Pcs) ÷ 144. */
+function rowMeasure(r: Row): number {
+  return cftCalc(+r.l || 0, +r.w || 0, +r.t || 0, +r.pcs || 0);
+}
 
 export default function CalculatorContent() {
-  const [items, setItems] = useState<Item[]>([
-    { id: 1, type: "Teak Wood", length: "", width: "", thickness: "", qty: "1" },
+  const idRef = useRef(10);
+  const nextId = () => ++idRef.current;
+  const newRow = (): Row => ({ id: nextId(), l: "", w: "", t: "", pcs: "" });
+
+  const [sections, setSections] = useState<Section[]>([
+    { id: 1, wood: "Teak Wood", rate: "4000", rows: [newRow()] },
   ]);
-  const [nextId, setNextId] = useState(2);
-  const [activeId, setActiveId] = useState(1);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+  const [quoteNo, setQuoteNo] = useState("");
+  const [date, setDate] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [gstOn, setGstOn] = useState(false);
+  const [gstPct, setGstPct] = useState("18");
+  const [pendingFocus, setPendingFocus] = useState<string | null>(null);
 
-  const clean = (v: string) =>
-    v.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+  // numbering + date are client-only (avoid hydration mismatch)
+  useEffect(() => {
+    setQuoteNo(peekQuotationNo());
+    setDate(todayStr());
+  }, []);
 
-  const update = (id: number, key: keyof Item, v: string) => {
-    setActiveId(id);
-    setItems((arr) =>
-      arr.map((it) =>
-        it.id === id ? { ...it, [key]: key === "type" ? v : clean(v) } : it,
+  useEffect(() => {
+    if (!pendingFocus) return;
+    document.getElementById(pendingFocus)?.focus();
+    setPendingFocus(null);
+  }, [pendingFocus, sections]);
+
+  // ---- sanitisers ----
+  const num = (v: string) => v.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+  const int = (v: string) => v.replace(/[^0-9]/g, "");
+
+  // ---- row / section mutations ----
+  const cellId = (si: number, ri: number, ci: number) => `q-${si}-${ri}-${ci}`;
+
+  const addRow = (si: number) =>
+    setSections((prev) => prev.map((s, i) => (i === si ? { ...s, rows: [...s.rows, newRow()] } : s)));
+
+  const setCell = (si: number, ri: number, key: keyof Row, raw: string) => {
+    const val = key === "pcs" ? int(raw) : num(raw);
+    const sec = sections[si];
+    const lastKey = COLS[COLS.length - 1].key;
+    setSections((prev) =>
+      prev.map((s, i) =>
+        i !== si ? s : { ...s, rows: s.rows.map((r, j) => (j === ri ? { ...r, [key]: val } : r)) },
       ),
     );
+    // auto-append a fresh row when the last column of the last row gets filled
+    if (key === lastKey && val !== "" && ri === sec.rows.length - 1) addRow(si);
   };
 
-  const addRow = () => {
-    setItems((arr) => [
-      ...arr,
-      { id: nextId, type: "Teak Wood", length: "", width: "", thickness: "", qty: "1" },
-    ]);
-    setNextId((n) => n + 1);
-  };
-
-  const delRow = (id: number) =>
-    setItems((arr) =>
-      arr.length > 1
-        ? arr.filter((it) => it.id !== id)
-        : [{ id: Date.now(), type: "Teak Wood", length: "", width: "", thickness: "", qty: "1" }],
+  const delRow = (si: number, ri: number) =>
+    setSections((prev) =>
+      prev.map((s, i) =>
+        i !== si ? s : { ...s, rows: s.rows.length > 1 ? s.rows.filter((_, j) => j !== ri) : [newRow()] },
+      ),
     );
 
-  const totalCft = items.reduce((s, it) => s + cftOf(it), 0);
-  const totalEst = items.reduce((s, it) => s + cftOf(it) * rateOf(it.type), 0);
-  const hasData = items.some((it) => cftOf(it) > 0);
+  const setSec = (si: number, patch: Partial<Section>) =>
+    setSections((prev) => prev.map((s, i) => (i === si ? { ...s, ...patch } : s)));
 
-  // active row → live 3D preview (length in ft, width/thickness in inches)
-  const active = items.find((it) => it.id === activeId) ?? items[0];
-  const aL = parseFloat(active.length) || 0;
-  const aW = parseFloat(active.width) || 0;
-  const aT = parseFloat(active.thickness) || 0;
-  const hasDims = aL > 0 && aW > 0 && aT > 0;
-  const viewL = hasDims ? aL * 12 : 72; // → inches, matches width/thickness
-  const viewW = hasDims ? aW : 6;
-  const viewT = hasDims ? aT : 2;
-  const activeCft = cftOf(active);
+  const delSection = (si: number) =>
+    setSections((prev) => (prev.length > 1 ? prev.filter((_, i) => i !== si) : prev));
+
+  const addWood = () => {
+    const used = sections.map((s) => s.wood);
+    const wood = WOOD_CYCLE.find((w) => !used.includes(w)) ?? "Teak Wood";
+    setSections((prev) => [
+      ...prev,
+      { id: nextId(), wood, rate: String(WOOD_RATES[wood] ?? 4000), rows: [newRow()] },
+    ]);
+  };
+
+  // ---- arrow-key grid navigation ----
+  const onCellKey = (e: React.KeyboardEvent<HTMLInputElement>, si: number, ri: number, ci: number) => {
+    const el = e.currentTarget;
+    const sec = sections[si];
+    const nCols = COLS.length;
+    const nRows = sec.rows.length;
+    const atStart = el.selectionStart === 0 && el.selectionEnd === 0;
+    const atEnd = el.selectionStart === el.value.length && el.selectionEnd === el.value.length;
+    const go = (r: number, c: number) => {
+      e.preventDefault();
+      document.getElementById(cellId(si, r, c))?.focus();
+    };
+    switch (e.key) {
+      case "ArrowRight":
+        if (atEnd) {
+          if (ci < nCols - 1) go(ri, ci + 1);
+          else if (ri < nRows - 1) go(ri + 1, 0);
+        }
+        break;
+      case "ArrowLeft":
+        if (atStart) {
+          if (ci > 0) go(ri, ci - 1);
+          else if (ri > 0) go(ri - 1, nCols - 1);
+        }
+        break;
+      case "ArrowUp":
+        if (ri > 0) go(ri - 1, ci);
+        break;
+      case "Enter":
+      case "ArrowDown":
+        if (ri < nRows - 1) go(ri + 1, ci);
+        else {
+          addRow(si);
+          e.preventDefault();
+          setPendingFocus(cellId(si, ri + 1, ci));
+        }
+        break;
+    }
+  };
+
+  // ---- totals ----
+  const sectionMeasure = (s: Section) => s.rows.reduce((a, r) => a + rowMeasure(r), 0);
+  const sectionPcs = (s: Section) => s.rows.reduce((a, r) => a + (+r.pcs || 0), 0);
+  const sectionPrice = (s: Section) => Math.round(sectionMeasure(s) * (+s.rate || 0) * 100) / 100;
+
+  const subtotal = Math.round(sections.reduce((a, s) => a + sectionPrice(s), 0) * 100) / 100;
+  const gstAmt = gstOn ? Math.round(subtotal * (+gstPct || 0)) / 100 : 0;
+  const grand = Math.round((subtotal + gstAmt) * 100) / 100;
+  const hasData = sections.some((s) => sectionMeasure(s) > 0);
+
+  // ---- actions ----
+  const doPrint = () => {
+    commitQuotationNo(quoteNo);
+    window.print();
+  };
 
   const sendWhatsApp = () => {
-    let msg = `🏗️ *TIMBER REQUIREMENT REQUEST*\n\n`;
-    if (name) msg += `👤 Name: ${name}\n`;
-    if (phone) msg += `📞 Phone: ${phone}\n`;
-    if (address) msg += `📍 Delivery: ${address}\n`;
-    msg += `\n📋 *REQUIREMENTS:*\n`;
-    items.forEach((it, i) => {
-      const cft = cftOf(it);
-      if (cft <= 0) return;
-      msg += `${i + 1}. ${it.type} — ${it.length}ft × ${it.width}" × ${it.thickness}" × ${parseInt(it.qty) || 1}pcs = ${cft.toFixed(2)} CFT\n`;
+    let m = `*QUOTATION — Abuzar Industries*\n`;
+    m += `Date: ${date}\n`;
+    if (customer) m += `Party: ${customer}\n`;
+    sections.forEach((s) => {
+      if (sectionMeasure(s) <= 0) return;
+      m += `\n*${s.wood}* @ ₹${s.rate}/cft\n`;
+      s.rows.forEach((r, i) => {
+        const meas = rowMeasure(r);
+        if (meas <= 0) return;
+        m += `${i + 1}. ${r.l}ft×${r.w}"×${r.t}"×${r.pcs}pc = ${meas.toFixed(2)} cft\n`;
+      });
+      m += `   Total: ${sectionMeasure(s).toFixed(2)} cft → ₹${inr(sectionPrice(s))}\n`;
     });
-    msg += `\n📊 *Total: ${totalCft.toFixed(2)} CFT*`;
-    if (totalEst > 0)
-      msg += `\n💰 Estimate: ₹${Math.round(totalEst).toLocaleString("en-IN")} (please confirm latest rates)`;
-    msg += `\n\nPlease share your best price. Thank you! 🙏`;
-    window.open(
-      `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
+    m += `\nSub-total: ₹${inr(subtotal)}`;
+    if (gstOn) m += `\nGST ${gstPct}%: ₹${inr(gstAmt)}`;
+    m += `\n*Grand Total: ₹${inr(grand)}*`;
+    m += `\n${rupeesInWords(grand)}`;
+    window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(m)}`, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div className="pt-24 pb-16">
-      {/* Header */}
-      <section className="py-12 sm:py-16 bg-pattern">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-semibold tracking-wider uppercase mb-6">
-              <Calculator size={13} />
-              Free Tool
-            </span>
-            <h1 className="font-[family:var(--font-display)] font-bold text-5xl sm:text-6xl leading-[0.95] tracking-tight text-walnut">
-              Timber Price
-              <br />
-              <span className="text-ochre">Calculator</span>
+    <div className="pt-24 pb-16 bg-pattern min-h-dvh">
+      {/* action bar */}
+      <div className="no-print sticky top-16 z-30 border-b border-walnut/10 bg-paper/90 backdrop-blur-md">
+        <div className="max-w-[900px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div>
+            <h1 className="font-[family:var(--font-display)] font-bold text-lg text-walnut leading-none">
+              Quotation Calculator
             </h1>
-            <p className="mt-5 max-w-xl mx-auto text-base text-ink-soft/80 leading-relaxed">
-              Add your requirements below — CFT is calculated instantly. Send the
-              full list to us on WhatsApp for final pricing.
+            <p className="text-[11px] text-ink-soft/60 mt-0.5">
+              Fill sizes · arrow keys to move · print or send
             </p>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="py-6">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-6">
-          {/* Wood types */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-          >
-            {WOODS.map((w) => (
-              <div
-                key={w.name}
-                className="flex items-center justify-between p-4 rounded-xl bg-paper border border-walnut/5"
-              >
-                <div>
-                  <div className="font-[family:var(--font-display)] font-bold text-walnut">
-                    {w.name}
-                  </div>
-                  <div className="text-xs text-ink-soft/60">
-                    ₹{w.rate.toLocaleString("en-IN")}/cu.ft
-                  </div>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-green/10 text-green text-[10px] font-bold uppercase tracking-wider">
-                  Available
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Live 3D preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="grid gap-5 overflow-hidden rounded-2xl border border-walnut/5 bg-gradient-to-br from-panel/70 via-paper to-ochre-soft/25 shadow-lg shadow-walnut/5 sm:grid-cols-[1.4fr_1fr]"
-          >
-            {/* 3D stage */}
-            <div className="relative min-h-[240px] sm:min-h-[300px]">
-              <PlankViewer
-                length={viewL}
-                width={viewW}
-                thickness={viewT}
-                species={active.type}
-                autoRotate
-              />
-              <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-walnut/10 bg-paper/80 px-2.5 py-1 backdrop-blur-md">
-                <Move3d size={12} className="text-ochre" />
-                <span className="font-mono text-[10px] font-medium uppercase tracking-widest text-ink-soft">
-                  Drag to rotate
-                </span>
-              </div>
-              {!hasDims && (
-                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-paper/80 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-ink-soft/60 backdrop-blur-md">
-                  Sample plank — enter sizes below
-                </div>
-              )}
-            </div>
-
-            {/* Live readout */}
-            <div className="flex flex-col justify-center gap-4 p-6 sm:p-7">
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-soft/50">
-                  Live preview
-                </span>
-                <h3 className="font-[family:var(--font-display)] text-2xl font-bold text-walnut">
-                  {active.type}
-                </h3>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { l: "Length", v: aL ? `${aL}` : "—", u: "ft" },
-                  { l: "Width", v: aW ? `${aW}` : "—", u: "in" },
-                  { l: "Thick", v: aT ? `${aT}` : "—", u: "in" },
-                ].map((d) => (
-                  <div
-                    key={d.l}
-                    className="rounded-xl border border-walnut/10 bg-paper/70 px-3 py-2.5 text-center"
-                  >
-                    <div className="text-[9px] font-semibold uppercase tracking-wider text-ink-soft/50">
-                      {d.l}
-                    </div>
-                    <div className="font-mono text-lg font-semibold text-walnut leading-tight">
-                      {d.v}
-                      <span className="ml-0.5 text-[10px] text-ink-soft/50">{d.u}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-walnut/5 to-ochre/10 px-4 py-3">
-                <span className="text-xs font-medium uppercase tracking-wider text-ink-soft/70">
-                  This piece
-                </span>
-                <span className="font-[family:var(--font-display)] text-2xl font-bold text-ochre leading-none">
-                  {activeCft.toFixed(2)}
-                  <span className="ml-1 text-xs text-ink-soft/60">cft</span>
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Calculation sheet */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="rounded-2xl bg-paper border border-walnut/5 shadow-lg shadow-walnut/5 p-6 sm:p-8"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-              <div>
-                <h2 className="font-[family:var(--font-display)] font-bold text-xl text-walnut flex items-center gap-2">
-                  <FileSpreadsheet size={18} className="text-ochre" />
-                  Cut-Size Calculation Sheet
-                </h2>
-                <p className="text-xs text-ink-soft/60 mt-1">
-                  Length in feet · Width & Thickness in inches
-                </p>
-              </div>
-              <button
-                onClick={addRow}
-                className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-walnut text-paper text-xs font-semibold hover:bg-walnut-2 transition-colors"
-              >
-                <Plus size={14} />
-                Add Row
-              </button>
-            </div>
-
-            {/* Desktop table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-[11px] text-ink-soft/60 font-semibold tracking-wider uppercase border-b border-walnut/10">
-                    <th className="text-left pb-3 pr-3">Timber Type</th>
-                    <th className="text-left pb-3 pr-3">Length (ft)</th>
-                    <th className="text-left pb-3 pr-3">Width (in)</th>
-                    <th className="text-left pb-3 pr-3">Thickness (in)</th>
-                    <th className="text-left pb-3 pr-3">Qty</th>
-                    <th className="text-right pb-3 pr-3">Cubic Feet</th>
-                    <th className="w-10 pb-3" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((it) => (
-                    <tr key={it.id} className="border-b border-walnut/5">
-                      <td className="py-2.5 pr-3">
-                        <select
-                          value={it.type}
-                          onChange={(e) => update(it.id, "type", e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-panel border border-walnut/10 focus:border-ochre/40 outline-none text-sm text-ink"
-                        >
-                          {WOODS.map((w) => (
-                            <option key={w.name}>{w.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      {(["length", "width", "thickness", "qty"] as const).map(
-                        (k) => (
-                          <td key={k} className="py-2.5 pr-3">
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={it[k]}
-                              onChange={(e) => update(it.id, k, e.target.value)}
-                              className="w-20 px-3 py-2 rounded-lg bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none font-mono text-sm text-ink"
-                            />
-                          </td>
-                        ),
-                      )}
-                      <td className="py-2.5 pr-3 text-right font-mono font-semibold text-ochre whitespace-nowrap">
-                        {cftOf(it).toFixed(2)} cft
-                      </td>
-                      <td className="py-2.5 text-right">
-                        <button
-                          onClick={() => delRow(it.id)}
-                          className="p-2 rounded-lg text-ink-soft/30 hover:text-danger hover:bg-danger/5 transition-colors"
-                          aria-label="Remove row"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile cards */}
-            <div className="md:hidden space-y-4">
-              {items.map((it) => (
-                <div
-                  key={it.id}
-                  className="rounded-xl border border-walnut/10 p-4 bg-panel/40"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <select
-                      value={it.type}
-                      onChange={(e) => update(it.id, "type", e.target.value)}
-                      className="flex-1 px-3 py-2 rounded-lg bg-paper border border-walnut/10 focus:border-ochre/40 outline-none text-sm text-ink"
-                    >
-                      {WOODS.map((w) => (
-                        <option key={w.name}>{w.name}</option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={() => delRow(it.id)}
-                      className="p-2 rounded-lg text-ink-soft/40 hover:text-danger transition-colors"
-                      aria-label="Remove row"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {(
-                      [
-                        ["length", "Length (ft)"],
-                        ["width", "Width (in)"],
-                        ["thickness", "Thickness (in)"],
-                        ["qty", "Quantity"],
-                      ] as const
-                    ).map(([k, label]) => (
-                      <div key={k}>
-                        <label className="block text-[10px] font-semibold tracking-wider uppercase text-ink-soft/60 mb-1">
-                          {label}
-                        </label>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={it[k]}
-                          onChange={(e) => update(it.id, k, e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-paper border border-walnut/10 focus:border-ochre/40 outline-none font-mono text-sm text-ink"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-3 text-center py-2 rounded-lg bg-paper">
-                    <span className="text-xs text-ink-soft/60 mr-2">
-                      Cubic Feet:
-                    </span>
-                    <span className="font-mono font-bold text-ochre">
-                      {cftOf(it).toFixed(2)} cft
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Total */}
-            <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-walnut/5 to-ochre/5 border border-ochre/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div>
-                <h3 className="font-[family:var(--font-display)] font-bold text-walnut">
-                  Total Requirements
-                </h3>
-                <p className="text-xs text-ink-soft/60">
-                  {items.length} item{items.length !== 1 ? "s" : ""} · final
-                  price confirmed on WhatsApp
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="font-[family:var(--font-display)] font-bold text-3xl text-ochre leading-none">
-                  {totalCft.toFixed(2)} cft
-                </div>
-                {totalEst > 0 && (
-                  <div className="text-sm text-ink-soft mt-1">
-                    Est. ₹{Math.round(totalEst).toLocaleString("en-IN")}
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Customer info + send */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="rounded-2xl bg-paper border border-walnut/5 shadow-lg shadow-walnut/5 p-6 sm:p-8"
-          >
-            <h2 className="font-[family:var(--font-display)] font-bold text-xl text-walnut flex items-center gap-2 mb-5">
-              <User size={18} className="text-ochre" />
-              Your Details <span className="text-xs font-normal text-ink-soft/50">(optional)</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                className="px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none text-ink placeholder:text-ink-soft/30"
-              />
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Phone number"
-                className="px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none text-ink placeholder:text-ink-soft/30"
-              />
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Delivery address / city"
-                className="px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none text-ink placeholder:text-ink-soft/30"
-              />
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
             <button
               onClick={sendWhatsApp}
               disabled={!hasData}
-              className="w-full flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-green text-paper text-sm font-semibold hover:bg-green/90 transition-all active:scale-[0.99] disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-green/20"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-green text-paper text-xs font-semibold hover:bg-green/90 transition-colors disabled:opacity-30"
             >
-              <Send size={16} />
-              Send Requirements on WhatsApp
+              <Send size={14} /> WhatsApp
             </button>
-          </motion.div>
+            <button
+              onClick={doPrint}
+              disabled={!hasData}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-walnut text-paper text-xs font-semibold hover:bg-walnut-2 transition-colors disabled:opacity-30"
+            >
+              <Printer size={14} /> Print / PDF
+            </button>
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* the sheet */}
+      <div className="max-w-[900px] mx-auto px-4 pt-6">
+        <div id="qprint" className="qsheet">
+          {/* masthead */}
+          <div className="qh-card">
+            <div className="qh-brand">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="qh-logo" src="/images/logo-brand-512.png" alt="Abuzar Industries" />
+              <div>
+                <div className="qh-name">
+                  <span className="qh-chip">Quotation</span>
+                </div>
+                <div className="qh-sub qh-web">Generated from abuzarindustries.in</div>
+              </div>
+            </div>
+            <div className="qh-meta">
+              <div className="qh-cell">
+                <span className="qh-lab">Date</span>
+                <input className="qh-input" value={date} onChange={(e) => setDate(e.target.value)} />
+              </div>
+              <div className="qh-cell">
+                <span className="qh-lab">Customer Name</span>
+                <input
+                  className="qh-input"
+                  value={customer}
+                  placeholder="Party name"
+                  onChange={(e) => setCustomer(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* wood sections */}
+          <div className="qsec-grid">
+            {sections.map((sec, si) => (
+              <div className="qsec" key={sec.id}>
+                <div className="qsec-head">
+                  <Menu size={15} strokeWidth={2.5} className="no-print opacity-60" />
+                  <input
+                    className="qsec-name"
+                    value={sec.wood}
+                    onChange={(e) => setSec(si, { wood: e.target.value })}
+                  />
+                  <span className="qsec-pcs">
+                    Total Pcs<b>{sectionPcs(sec)}</b>
+                  </span>
+                  {sections.length > 1 && (
+                    <span className="qsec-x no-print" onClick={() => delSection(si)} role="button">
+                      <X size={14} />
+                    </span>
+                  )}
+                </div>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th style={{ width: 26 }}>#</th>
+                      <th>CFT</th>
+                      {COLS.map((c) => (
+                        <th key={c.key}>
+                          {c.label}
+                          <small>{c.sub}</small>
+                        </th>
+                      ))}
+                      <th className="no-print" style={{ width: 26 }} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sec.rows.map((r, ri) => (
+                      <tr key={r.id}>
+                        <td className="q-idx">{ri + 1}</td>
+                        <td className="q-cft">{rowMeasure(r).toFixed(2)}</td>
+                        {COLS.map((c, ci) => (
+                          <td key={c.key}>
+                            <input
+                              id={cellId(si, ri, ci)}
+                              className="q-in"
+                              inputMode="decimal"
+                              value={r[c.key] as string}
+                              onChange={(e) => setCell(si, ri, c.key, e.target.value)}
+                              onKeyDown={(e) => onCellKey(e, si, ri, ci)}
+                            />
+                          </td>
+                        ))}
+                        <td className="no-print">
+                          <span className="q-rowx" onClick={() => delRow(si, ri)} role="button">
+                            <X size={13} />
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <div className="qsec-foot">
+                  <button className="q-addline no-print" onClick={() => addRow(si)}>
+                    + Add
+                    <br />
+                    Line
+                  </button>
+                  <div>
+                    <span className="qf-lab">Total CFT</span>
+                    <span className="qf-val">{sectionMeasure(sec).toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="qf-lab">Rate ₹/cft</span>
+                    <input
+                      className="q-rate"
+                      inputMode="decimal"
+                      value={sec.rate}
+                      onChange={(e) => setSec(si, { rate: num(e.target.value) })}
+                    />
+                  </div>
+                  <div className="qf-price">
+                    <span className="qf-lab">Total Price</span>
+                    <span className="qf-val">₹ {inr(sectionPrice(sec))}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button className="q-addwood no-print" onClick={addWood}>
+            + Add Wood Type
+          </button>
+
+          {/* totals */}
+          <div className="q-totals">
+            <div className="qt-row">
+              <span className="qt-lab">Sub-total</span>
+              <span className="qt-val">{inr(subtotal)}</span>
+            </div>
+            <div className="qt-row">
+              <span className="qt-lab">
+                <span
+                  className={`q-switch ${gstOn ? "on" : ""}`}
+                  role="switch"
+                  aria-checked={gstOn}
+                  onClick={() => setGstOn((v) => !v)}
+                />
+                GST
+                <input
+                  className="qt-gstin"
+                  inputMode="decimal"
+                  value={gstPct}
+                  disabled={!gstOn}
+                  onChange={(e) => setGstPct(num(e.target.value))}
+                />
+                %
+              </span>
+              <span className="qt-val">{gstOn ? inr(gstAmt) : "—"}</span>
+            </div>
+            <div className="qt-grand">
+              <span className="qt-lab">Grand Total</span>
+              <span className="qt-val">₹ {inr(grand)}</span>
+            </div>
+          </div>
+
+          <p className="q-words">
+            Amount in words: <b>{rupeesInWords(grand)}</b>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -46,3 +46,9 @@ next-env.d.ts
 # raw AI-generated video originals (clean-named copies are committed instead)
 public/videos/Cinematic_*
 public/videos/*_202607110017.mp4
+
+# oversized logo original (resized logo-brand-512/og are committed)
+public/images/logo-brand.PNG
+
+# raw seedream originals (clean teak-product/white-teak-product copies are committed)
+public/images/seedream-*

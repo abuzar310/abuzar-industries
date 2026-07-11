@@ -34,7 +34,7 @@ const PHONE = "919845378626";
 const products = [
   {
     name: "Premium Teak Wood Planks",
-    image: "/images/1.jpg",
+    image: "/images/teak-product.jpg",
     video: "/videos/plank-teak.mp4",
     videoPoster: "/plank-teak-poster.jpg",
     species: "Teak Wood",
@@ -47,7 +47,7 @@ const products = [
   },
   {
     name: "White Teak Wood Planks",
-    image: "/images/2.jpg",
+    image: "/images/white-teak-product.jpg",
     video: "/videos/plank-white-teak.mp4",
     videoPoster: "/plank-white-teak-poster.jpg",
     species: "White Teak",
@@ -66,7 +66,7 @@ const products = [
     species: "Neem Wood",
     dims: { l: 72, w: 6, t: 2 },
     sizes: ['1" × 4" × 6\'', '2" × 6" × 8\'', "Custom sizes available"],
-    price: "₹1,500",
+    price: "₹1,000",
     unit: "per cubic foot",
     desc: "Durable, pest-resistant neem wood — ideal for outdoor furniture and general construction.",
     tag: "Value",

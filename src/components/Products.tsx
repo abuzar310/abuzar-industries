@@ -24,7 +24,7 @@ const products = [
     icon: Building2,
     name: "Neem Wood Planks",
     specs: "1\"×4\"×6' · 2\"×6\"×8' · Custom sizes",
-    price: "₹1,500/cu.ft",
+    price: "₹1,000/cu.ft",
     desc: "Durable, pest-resistant neem wood ideal for outdoor furniture, doors, and general construction.",
     tag: "Value",
   },

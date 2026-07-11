@@ -17,7 +17,7 @@ const services = [
   {
     icon: Building2,
     title: "Neem Wood",
-    desc: "Durable neem wood planks from ₹1,500/cu.ft. Pest-resistant and perfect for outdoor furniture and construction.",
+    desc: "Durable neem wood planks from ₹1,000/cu.ft. Pest-resistant and perfect for outdoor furniture and construction.",
   },
   {
     icon: Ruler,

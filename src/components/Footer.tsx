@@ -9,10 +9,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-ochre flex items-center justify-center text-paper font-[family:var(--font-display)] font-bold text-sm tracking-wider">
-                AI
-              </div>
+            <div className="flex items-center gap-2.5 mb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo-brand-512.png"
+                alt="Abuzar Industries"
+                className="w-10 h-10 object-contain"
+              />
               <span className="font-[family:var(--font-display)] font-bold text-xl tracking-wide text-paper">
                 Abuzar <span className="text-ochre">Industries</span>
               </span>
