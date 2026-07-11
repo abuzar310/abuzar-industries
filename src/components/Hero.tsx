@@ -1,79 +1,85 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDown, Shield, Truck, BadgeCheck } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Shield, Truck, BadgeCheck } from "lucide-react";
 import HeroVideo from "./HeroVideo";
 
+const EASE = [0.22, 1, 0.36, 1] as const;
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 28 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.85, delay: 0.15 + i * 0.11, ease: EASE },
   }),
 };
 
 const stamps = [
   { icon: Shield, label: "Trusted Since 1995" },
-  { icon: Truck, label: "Delivery Across Karnataka" },
+  { icon: Truck, label: "Across Karnataka" },
   { icon: BadgeCheck, label: "Custom Cut Sizes" },
 ];
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const videoY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
     <section
+      ref={ref}
       id="hero"
-      className="relative min-h-dvh flex items-center overflow-hidden bg-pattern grain-overlay"
+      className="relative min-h-dvh flex items-center overflow-hidden grain-overlay"
     >
-      {/* Decorative background */}
+      {/* warm depth field */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-ochre/10 blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-[28rem] h-[28rem] rounded-full bg-walnut/10 blur-3xl" />
+        <div className="absolute top-[18%] -left-40 w-[32rem] h-[32rem] rounded-full bg-ochre/10 blur-[120px]" />
+        <div className="absolute bottom-[10%] -right-40 w-[34rem] h-[34rem] rounded-full bg-walnut/12 blur-[130px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(90,61,36,0.05)_0.6px,transparent_0.6px)] [background-size:26px_26px] opacity-60" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 lg:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 lg:py-28">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           {/* ---------- Left: copy ---------- */}
-          <div className="text-center lg:text-left">
-            {/* Badge */}
+          <motion.div style={{ y: copyY, opacity: fade }} className="text-center lg:text-left">
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={0}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-semibold tracking-wider uppercase mb-6"
+              className="inline-flex items-center gap-3 mb-7"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-ochre animate-pulse" />
-              Chitradurga&apos;s Trusted Timber Supplier
+              <span className="rule-gold hidden sm:block" />
+              <span className="eyebrow text-ochre">Chitradurga&apos;s Timber House</span>
             </motion.div>
 
-            {/* Heading */}
             <motion.h1
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={1}
-              className="font-[family:var(--font-display)] font-bold text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl leading-[0.95] tracking-tight text-walnut"
+              className="t-display text-walnut"
             >
               Trusted Timber
               <br />
-              <span className="text-ochre">Specialists</span>
+              <span className="gold-text italic font-[500]">Specialists</span>
             </motion.h1>
 
-            {/* Description */}
             <motion.p
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={2}
-              className="mt-6 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-ink-soft/80 leading-relaxed"
+              className="mt-7 max-w-lg mx-auto lg:mx-0 text-base sm:text-[17px] text-ink-soft/85 leading-relaxed"
             >
-              Premium teak wood, white teak, and neem wood — cut to your exact
-              specifications. Serving builders and craftsmen across Karnataka
-              since 1995.
+              Imported teak, white teak and neem — seasoned, graded and cut to
+              your exact specification. Three generations of timber craft since
+              1995.
             </motion.p>
 
-            {/* CTA buttons */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -83,67 +89,71 @@ export default function Hero() {
             >
               <a
                 href="/calculator"
-                className="px-8 py-3.5 rounded-xl bg-walnut text-paper font-semibold text-sm tracking-wide hover:bg-walnut-2 transition-all active:scale-[0.97] shadow-lg shadow-walnut/20"
+                className="sheen group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-walnut text-paper text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-walnut-2 active:scale-[0.98] shadow-[0_18px_40px_-18px_rgba(90,61,36,0.6)]"
               >
-                Get Instant Quote
+                Build a Quotation
+                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
               <a
                 href="https://wa.me/919845378626?text=Hi%20Abuzar%20Industries%2C%20I%20want%20to%20check%20timber%20prices%20and%20availability"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-3.5 rounded-xl border border-walnut/20 text-ink-soft font-semibold text-sm tracking-wide hover:bg-panel hover:text-walnut transition-all active:scale-[0.97]"
+                className="inline-flex items-center px-8 py-4 rounded-full border border-walnut/25 text-ink-soft text-sm font-semibold tracking-wide transition-all duration-300 hover:border-walnut hover:text-walnut hover:bg-panel/60 active:scale-[0.98]"
               >
                 WhatsApp Us
               </a>
             </motion.div>
 
-            {/* Trust stamps */}
+            {/* trust bar */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={4}
-              className="mt-14 flex flex-wrap items-center justify-center lg:justify-start gap-x-10 gap-y-4"
+              className="mt-14 flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4"
             >
-              {stamps.map((s) => (
-                <div
-                  key={s.label}
-                  className="flex items-center gap-2.5 text-ink-soft/60"
-                >
-                  <s.icon size={17} className="text-ochre" />
-                  <span className="text-xs font-medium tracking-wide uppercase">
-                    {s.label}
+              {stamps.map((s, i) => (
+                <div key={s.label} className="flex items-center gap-6">
+                  {i > 0 && <span className="hidden sm:block h-8 w-px bg-walnut/12" />}
+                  <span className="flex items-center gap-2.5 text-ink-soft/70">
+                    <s.icon size={16} className="text-ochre" strokeWidth={1.75} />
+                    <span className="text-xs font-medium tracking-wide uppercase">{s.label}</span>
                   </span>
                 </div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* ---------- Right: cinematic timber video ---------- */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
+            style={{ y: videoY }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1, delay: 0.35, ease: EASE }}
           >
             <HeroVideo />
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* scroll cue */}
       <motion.a
         href="#services"
+        aria-label="Scroll to explore"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-ink-soft/40 hover:text-ochre transition-colors"
+        transition={{ delay: 1.6, duration: 0.8 }}
+        style={{ opacity: fade }}
+        className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-ink-soft/45 hover:text-ochre transition-colors"
       >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ArrowDown size={20} />
-        </motion.div>
+        <span className="eyebrow text-[0.6rem]">Scroll</span>
+        <span className="relative h-9 w-[22px] rounded-full border border-current">
+          <motion.span
+            className="absolute left-1/2 top-1.5 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-current"
+            animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </span>
       </motion.a>
     </section>
   );

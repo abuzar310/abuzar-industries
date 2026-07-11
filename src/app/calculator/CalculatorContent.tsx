@@ -194,7 +194,7 @@ export default function CalculatorContent() {
     if (gstOn) m += `\nGST ${gstPct}%: ₹${inr(gstAmt)}`;
     m += `\n*Grand Total: ₹${inr(grand)}*`;
     m += `\n${rupeesInWords(grand)}`;
-    window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(m)}`, "_blank", "noopener,noreferrer");
+    window.location.href = `https://wa.me/${PHONE}?text=${encodeURIComponent(m)}`;
   };
 
   return (

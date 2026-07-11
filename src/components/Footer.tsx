@@ -5,33 +5,32 @@ const year = new Date().getFullYear();
 export default function Footer() {
   return (
     <footer className="bg-walnut text-paper/80">
+      {/* warm gold top edge */}
+      <div className="h-px bg-gradient-to-r from-transparent via-[#C79A4B]/50 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-4">
+            <div className="flex items-center gap-3 mb-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo-brand-512.png"
-                alt="Abuzar Industries"
-                className="w-10 h-10 object-contain"
-              />
-              <span className="font-[family:var(--font-display)] font-bold text-xl tracking-wide text-paper">
-                Abuzar <span className="text-ochre">Industries</span>
-              </span>
+              <img src="/images/logo-brand-512.png" alt="Abuzar Industries" className="w-11 h-11 object-contain" />
+              <div>
+                <span className="font-[family:var(--font-serif)] font-semibold text-xl text-paper">
+                  Abuzar <span className="gold-text">Industries</span>
+                </span>
+                <span className="block text-[10px] uppercase tracking-[0.2em] text-paper/35">Est. 1995</span>
+              </div>
             </div>
-            <p className="text-sm leading-relaxed text-paper/60">
-              Premium teak, white teak & neem wood — custom cut and delivered
-              across Karnataka from Chitradurga since 1995.
+            <p className="text-sm leading-relaxed text-paper/55 max-w-xs">
+              Premium teak, white teak and neem — custom cut and delivered across Karnataka since three generations.
             </p>
           </div>
 
           {/* Quick links */}
           <div>
-            <h3 className="font-[family:var(--font-display)] font-bold text-lg tracking-wide text-paper mb-4">
-              Quick Links
-            </h3>
-            <ul className="space-y-2.5">
+            <span className="block eyebrow text-paper/45 mb-5">Links</span>
+            <ul className="space-y-3">
               {[
                 { href: "/products", label: "Our Products" },
                 { href: "/calculator", label: "Price Calculator" },
@@ -39,12 +38,9 @@ export default function Footer() {
                 { href: "/contact", label: "Contact" },
               ].map((l) => (
                 <li key={l.href}>
-                  <a
-                    href={l.href}
-                    className="flex items-center gap-1 text-sm hover:text-ochre transition-colors"
-                  >
+                  <a href={l.href} className="inline-flex items-center gap-1.5 text-sm text-paper/65 hover:text-ochre transition-colors duration-300 link-underline after:bg-ochre after:bottom-0 after:h-px">
                     {l.label}
-                    <ArrowUpRight size={12} />
+                    <ArrowUpRight size={12} className="opacity-50" />
                   </a>
                 </li>
               ))}
@@ -53,34 +49,25 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-[family:var(--font-display)] font-bold text-lg tracking-wide text-paper mb-4">
-              Get in Touch
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-ochre" />
+            <span className="block eyebrow text-paper/45 mb-5">Contact</span>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3 text-paper/65">
+                <MapPin size={15} className="mt-0.5 shrink-0 text-ochre" strokeWidth={1.75} />
                 <span>
-                  KSSIDC Industrial Area, DVG Road,
-                  <br />
-                  Chitradurga, Karnataka
+                  KSSIDC Industrial Area, DVG Road<br />
+                  Chitradurga, Karnataka — 577501
                 </span>
               </li>
               <li>
-                <a
-                  href="tel:+919845378626"
-                  className="flex items-center gap-3 hover:text-ochre transition-colors"
-                >
-                  <Phone size={16} className="shrink-0 text-ochre" />
-                  <span>+91 98453 78626</span>
+                <a href="tel:+919845378626" className="inline-flex items-center gap-3 text-paper/65 hover:text-ochre transition-colors duration-300">
+                  <Phone size={15} className="shrink-0 text-ochre" strokeWidth={1.75} />
+                  +91 98453 78626
                 </a>
               </li>
               <li>
-                <a
-                  href="mailto:info@abuzarindustries.in"
-                  className="flex items-center gap-3 hover:text-ochre transition-colors"
-                >
-                  <Mail size={16} className="shrink-0 text-ochre" />
-                  <span>info@abuzarindustries.in</span>
+                <a href="mailto:info@abuzarindustries.in" className="inline-flex items-center gap-3 text-paper/65 hover:text-ochre transition-colors duration-300">
+                  <Mail size={15} className="shrink-0 text-ochre" strokeWidth={1.75} />
+                  info@abuzarindustries.in
                 </a>
               </li>
             </ul>
@@ -88,11 +75,11 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-paper/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-paper/40">
-          <span>© {year} Abuzar Industries. All rights reserved.</span>
-          <span>Crafted with care ✦ Timber since 1995</span>
+      {/* Bottom */}
+      <div className="border-t border-paper/8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-paper/30">
+          <span>© {year} Abuzar Industries</span>
+          <span>Three generations of timber craft</span>
         </div>
       </div>
     </footer>

@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
-import { Saira_Condensed, Inter, Spline_Sans_Mono } from "next/font/google";
+import { Saira_Condensed, Inter, Spline_Sans_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Preloader from "@/components/Preloader";
 
 const display = Saira_Condensed({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+});
+
+// editorial serif for premium headings (variable font, full weight range)
+const serif = Fraunces({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 const sans = Inter({
@@ -57,9 +66,10 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${display.variable} ${sans.variable} ${mono.variable} scroll-smooth`}
+      className={`${display.variable} ${serif.variable} ${sans.variable} ${mono.variable} scroll-smooth`}
     >
       <body className="min-h-dvh flex flex-col antialiased">
+        <Preloader />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
