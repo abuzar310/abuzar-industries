@@ -163,7 +163,7 @@ export default function QuoteTool() {
                   type="text"
                   value={woodType}
                   onChange={(e) => setWoodType(e.target.value)}
-                  placeholder="e.g. Burma Teak"
+                  placeholder="e.g. Ghana Teak"
                   list="woods"
                   className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
                 />

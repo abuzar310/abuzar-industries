@@ -7,7 +7,7 @@ const services = [
   {
     icon: Trees,
     title: "Premium Teak Wood",
-    desc: "High-grade Burma & Indian teak planks from ₹4,000/cu.ft. Kiln-dried and ready for joinery, furniture, and construction.",
+    desc: "Premium imported teak planks — Ghana, Togo & Burma — from ₹4,000/cu.ft. Kiln-dried and ready for joinery, furniture, and construction.",
   },
   {
     icon: Leaf,

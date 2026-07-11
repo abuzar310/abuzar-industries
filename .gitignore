@@ -52,3 +52,7 @@ public/images/logo-brand.PNG
 
 # raw seedream originals (clean teak-product/white-teak-product copies are committed)
 public/images/seedream-*
+
+# space-named product originals (clean *-product.jpg copies are committed)
+public/images/white\ teak\ product.jpg
+public/images/NEEM-PRODUCT\ .jpg

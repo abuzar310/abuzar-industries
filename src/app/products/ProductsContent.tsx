@@ -42,7 +42,7 @@ const products = [
     sizes: ['2" × 6" × 6\'', '2" × 8" × 8\'', "Custom sizes available"],
     price: "₹4,000",
     unit: "per cubic foot",
-    desc: "High-grade teak — kiln-dried and ready for joinery, furniture, doors, and premium construction.",
+    desc: "High-grade imported teak — Ghana, Togo & Burma. Kiln-dried and ready for joinery, furniture, doors, and premium construction.",
     tag: "Best Seller",
   },
   {
@@ -60,7 +60,7 @@ const products = [
   },
   {
     name: "Neem Wood Planks",
-    image: "/images/3.jpg",
+    image: "/images/neem-product.jpg",
     video: null as string | null,
     videoPoster: null as string | null,
     species: "Neem Wood",

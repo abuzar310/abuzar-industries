@@ -9,7 +9,7 @@ const products = [
     name: "Premium Teak Wood Planks",
     specs: "2\"×6\"×6' · 2\"×8\"×8' · Custom sizes",
     price: "₹4,000/cu.ft",
-    desc: "High-grade Burma & Indian teak. Kiln-dried, ready for joinery, furniture, and premium construction.",
+    desc: "Premium imported teak — Ghana, Togo & Burma. Kiln-dried, ready for joinery, furniture, and premium construction.",
     tag: "Best Seller",
   },
   {
