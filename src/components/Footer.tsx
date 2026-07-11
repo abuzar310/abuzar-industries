@@ -79,7 +79,7 @@ export default function Footer() {
       <div className="border-t border-paper/8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-paper/30">
           <span>© {year} Abuzar Industries</span>
-          <span>Three generations of timber craft</span>
+          <span>Made by Abuzar</span>
         </div>
       </div>
     </footer>

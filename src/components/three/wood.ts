@@ -4,7 +4,7 @@ import * as THREE from "three";
 export const SPECIES_COLOR: Record<string, string> = {
   "Teak Wood": "#8a5a2e",
   Teak: "#8a5a2e",
-  "White Teak": "#ccb789",
+  "White Teak": "#c4ad80",
   "Neem Wood": "#9c854f",
   Neem: "#9c854f",
 };
