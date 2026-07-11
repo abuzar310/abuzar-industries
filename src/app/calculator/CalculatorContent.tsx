@@ -232,6 +232,16 @@ export default function CalculatorContent() {
       {/* the sheet */}
       <div className="max-w-[900px] mx-auto px-4 pt-6">
         <div id="qprint" className="qsheet">
+          {/* diagonal watermark */}
+          <div className="qwatermark-wrap">
+            <div>
+              {Array.from({ length: 40 }).map((_, i) => (
+                <span key={i}>ABUZAR INDUSTRIES</span>
+              ))}
+            </div>
+          </div>
+          {/* computer-generated stamp */}
+          <div className="q-stamp">COMPUTER GENERATED</div>
           {/* masthead */}
           <div className="qh-card">
             <div className="qh-brand">
@@ -244,7 +254,8 @@ export default function CalculatorContent() {
                 <div className="qh-sub qh-web">Generated from abuzarindustries.in</div>
               </div>
             </div>
-            <div className="qh-meta">
+            <div className="rule-gold" />
+            <div className="qh-inner-row">
               <div className="qh-cell">
                 <span className="qh-lab">Date</span>
                 <input className="qh-input" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -389,6 +400,9 @@ export default function CalculatorContent() {
 
           <p className="q-words">
             Amount in words: <b>{rupeesInWords(grand)}</b>
+          </p>
+          <p className="q-disclaimer">
+            This is a computer-generated quotation from abuzarindustries.in. Prices are indicative and subject to change based on current market rates and availability. A final invoice will be issued upon order confirmation.
           </p>
         </div>
       </div>

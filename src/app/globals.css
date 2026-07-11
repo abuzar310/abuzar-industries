@@ -196,41 +196,89 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 }
 
 /* ============================================================
-   QUOTATION SHEET — office editor format (matches the books app)
+   QUOTATION SHEET — premium timber brand + misuse protection
    ============================================================ */
 .qsheet {
   max-width: 794px; /* A4 @96dpi */
   margin: 0 auto;
   font-size: 13px;
   color: var(--ink);
+  position: relative;
 }
 .qsheet input { outline: none; }
 .qsheet input::placeholder { color: rgba(110, 94, 78, 0.35); }
 
-/* -- masthead card -- */
+/* ── watermark (repeated diagonal) ── */
+.qwatermark-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+.qwatermark-wrap div {
+  position: absolute;
+  width: 200%;
+  top: -20%;
+  left: -50%;
+  height: 140%;
+  transform: rotate(-28deg);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 80px 100px;
+  padding: 40px;
+}
+.qwatermark-wrap span {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 64px;
+  color: rgba(185, 119, 46, 0.06);
+  white-space: nowrap;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+/* ── computer-generated stamp ── */
+.q-stamp {
+  position: absolute;
+  top: 40%;
+  right: -10px;
+  transform: rotate(18deg);
+  z-index: 6;
+  pointer-events: none;
+  border: 3px solid rgba(185, 119, 46, 0.25);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(185, 119, 46, 0.35);
+  background: rgba(250, 246, 239, 0.2);
+  backdrop-filter: blur(2px);
+}
+
+/* ── masthead card ── */
 .qh-card {
   background: var(--paper);
   border: 1.5px solid rgba(90, 61, 36, 0.25);
   border-radius: 16px;
   overflow: hidden;
+  position: relative;
+  z-index: 10;
 }
 .qh-brand {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 20px 12px;
+  padding: 18px 22px 14px;
 }
 .qh-logo { width: 64px; height: 64px; object-fit: contain; }
 .qh-name {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-}
-.qh-name h1 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 30px;
-  color: var(--ink);
-  margin: 0;
-  line-height: 1;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
 }
 .qh-chip {
   border: 1.5px solid var(--ochre);
@@ -238,22 +286,24 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   border-radius: 999px;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 3px 12px;
+  letter-spacing: 0.14em;
+  padding: 3px 14px;
   text-transform: uppercase;
 }
 .qh-sub { font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft); margin-top: 5px; }
-.qh-sub b { color: var(--ink); font-weight: 600; }
 .qh-web { color: var(--ochre); font-weight: 600; letter-spacing: 0.02em; }
 
-.qh-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-top: 1px solid rgba(90, 61, 36, 0.18);
+/* ── gold dividers instead of plain ── */
+.qh-card .rule-gold { height: 1px; width: 100%; background: linear-gradient(90deg, var(--ochre), transparent); margin: 0; }
+.qh-inner-row {
+  display: flex; flex-wrap: wrap;
 }
-.qh-meta3 { grid-template-columns: 1.2fr 1fr 1fr; }
-.qh-cell { padding: 10px 20px 12px; }
-.qh-cell + .qh-cell { border-left: 1px solid rgba(90, 61, 36, 0.18); }
+.qh-cell {
+  flex: 1 1 50%;
+  padding: 12px 22px 14px;
+  min-width: 160px;
+}
+.qh-cell + .qh-cell { border-left: 1px solid rgba(90, 61, 36, 0.12); }
 .qh-lab {
   display: block;
   font-size: 9.5px;
@@ -261,9 +311,8 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   letter-spacing: 0.16em;
   color: var(--ochre);
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
-.qh-val { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--ink); }
 .qh-input {
   width: 100%;
   background: transparent;
@@ -275,7 +324,7 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   padding: 0;
 }
 
-/* -- wood section card -- */
+/* ── wood section card ── */
 .qsec {
   background: var(--paper);
   border: 1.5px solid rgba(90, 61, 36, 0.25);
@@ -283,6 +332,8 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   overflow: hidden;
   margin-top: 14px;
   max-width: 460px;
+  position: relative;
+  z-index: 10;
 }
 .qsec-head {
   display: flex;
@@ -304,18 +355,8 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 }
 .qsec-pcs { font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
 .qsec-pcs b { font-family: var(--font-mono); font-size: 13px; margin-left: 5px; opacity: 1; }
-.qsec-modes { margin-left: auto; display: flex; gap: 3px; }
-.qsec-mode {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: 7px;
-  color: rgba(250, 246, 239, 0.75);
-  cursor: pointer;
-  border: 1px solid rgba(250, 246, 239, 0.25);
-}
-.qsec-mode.on { background: var(--paper); color: var(--walnut); border-color: var(--paper); }
 .qsec-x {
+  margin-left: auto;
   color: rgba(250, 246, 239, 0.6);
   cursor: pointer;
   padding: 2px 6px;
@@ -344,7 +385,14 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 }
 .qsec tbody tr:last-child td { border-bottom: none; }
 .q-idx { font-family: var(--font-mono); font-size: 10.5px; color: rgba(110, 94, 78, 0.6); width: 26px; }
-.q-cft { font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: var(--ink); width: 62px; white-space: nowrap; }
+.q-cft {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  width: 62px;
+  white-space: nowrap;
+}
 .q-in {
   width: 52px;
   text-align: center;
@@ -411,7 +459,7 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 .qf-price { margin-left: auto; text-align: right; }
 .qf-price .qf-val { font-size: 16px; }
 
-/* -- add wood type -- */
+/* ── add wood type ── */
 .q-addwood {
   width: 100%;
   max-width: 460px;
@@ -426,16 +474,20 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   color: var(--ink-soft);
   cursor: pointer;
   text-align: center;
+  position: relative;
+  z-index: 10;
 }
 .q-addwood:hover { border-color: var(--ochre); color: var(--ochre); }
 
-/* -- totals card -- */
+/* ── totals card (premium) ── */
 .q-totals {
   background: var(--paper);
   border: 1.5px solid rgba(90, 61, 36, 0.25);
   border-radius: 14px;
   overflow: hidden;
   margin-top: 18px;
+  position: relative;
+  z-index: 10;
 }
 .qt-row {
   display: flex;
@@ -445,6 +497,7 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   border-bottom: 1px solid rgba(90, 61, 36, 0.12);
 }
 .qt-row .qt-lab {
+  font-family: var(--font-sans);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -489,28 +542,59 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 }
 .q-switch.on { background: var(--green); }
 .q-switch.on::after { transform: translateX(14px); }
+
+/* ── grand total ── */
 .qt-grand {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: var(--walnut);
   color: var(--paper);
-  padding: 14px 18px;
+  padding: 14px 22px;
 }
 .qt-grand .qt-lab {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
-.qt-grand .qt-val { font-family: var(--font-display); font-weight: 700; font-size: 26px; }
-.q-words { margin: 12px 2px 0; font-size: 12px; color: var(--ink-soft); font-style: italic; }
-.q-words b { color: var(--ink); }
+.qt-grand .qt-val {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
 
-/* two-up section layout on wide screens (like the office canvas) */
+/* ── words + footer ── */
+.q-words {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-style: italic;
+  position: relative;
+  z-index: 10;
+}
+.q-words b { color: var(--ink); }
+.q-disclaimer {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(90, 61, 36, 0.1);
+  font-size: 9.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* two-up section layout */
 @media (min-width: 900px) {
   .qsec-grid { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
   .qsec-grid .qsec { margin-top: 0; flex: 0 1 calc(50% - 7px); }
 }
 
-/* -- print: the sheet only, exactly as on screen -- */
+/* print: watermark + stamp visible */
 @media print {
   body { background: #fff; }
   body * { visibility: hidden; }
@@ -518,11 +602,22 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   #qprint { position: absolute; top: 0; left: 0; right: 0; padding: 0; }
   .no-print { display: none !important; }
   .qsheet { max-width: 100%; }
+  .qwatermark-wrap { display: block !important; }
+  .q-stamp { display: block !important; }
   .qh-card, .qsec, .q-totals { break-inside: avoid; border-radius: 10px; }
-  .q-in, .q-rate, .qt-gstin, .qsec-name, .qh-input { border-bottom-color: transparent !important; }
-  .qsec-head, .qt-grand {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+  .q-in, .q-rate, .qt-gstin, .qsec-name, .qh-input { border-bottom-color: transparent !important; outline: none !important; }
+  .qsec-head, .qt-grand, .qh-brand {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
   @page { size: A4; margin: 10mm; }
+}
+
+/* mobile */
+@media (max-width: 639px) {
+  .qsec { max-width: 100% !important; }
+  .qh-cell { flex: 1 1 100%; }
+  .qh-cell + .qh-cell { border-left: none !important; border-top: 1px solid rgba(90,61,36,0.12) !important; }
+  .qwatermark-wrap span { font-size: 36px; }
+  .q-stamp { font-size: 10px; padding: 4px 10px; }
+  .qt-grand .qt-val { font-size: 22px; }
 }
