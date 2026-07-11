@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Preloader from "@/components/Preloader";
+import { ScrollProgress } from "@/components/motion/Patterns";
 
 const display = Saira_Condensed({
   variable: "--font-display",
@@ -69,6 +70,7 @@ export default function RootLayout({
       className={`${display.variable} ${serif.variable} ${sans.variable} ${mono.variable} scroll-smooth`}
     >
       <body className="min-h-dvh flex flex-col antialiased">
+        <ScrollProgress />
         <Preloader />
         <Nav />
         <main className="flex-1">{children}</main>

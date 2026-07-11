@@ -3,12 +3,13 @@
 import { Shield, Users, Leaf, TrendingUp } from "lucide-react";
 import VideoFrame from "./VideoFrame";
 import { Reveal, Stagger, StaggerItem } from "./motion/Reveal";
+import { AnimatedCounter } from "./motion/Patterns";
 
 const stats = [
-  { icon: Shield, value: "30+", label: "Years" },
-  { icon: Users, value: "1000+", label: "Clients" },
-  { icon: Leaf, value: "50K+", label: "CFT Delivered" },
-  { icon: TrendingUp, value: "99%", label: "On-Time" },
+  { icon: Shield, to: 30, suffix: "+", label: "Years" },
+  { icon: Users, to: 1000, suffix: "+", label: "Clients" },
+  { icon: Leaf, to: 50000, suffix: "+", label: "CFT Delivered" },
+  { icon: TrendingUp, to: 99, suffix: "%", label: "On-Time" },
 ];
 
 const values = [
@@ -103,7 +104,7 @@ export default function About() {
             <StaggerItem key={s.label} className="h-full">
               <div className="h-full bg-paper py-8 px-4 text-center transition-colors duration-300 hover:bg-panel/50">
                 <s.icon size={20} className="text-ochre mx-auto mb-3" strokeWidth={1.75} />
-                <div className="font-[family:var(--font-serif)] font-semibold text-3xl text-walnut">{s.value}</div>
+                <div className="font-[family:var(--font-serif)] font-semibold text-3xl text-walnut"><AnimatedCounter from={0} to={s.to} suffix={s.suffix} /></div>
                 <div className="eyebrow text-[0.6rem] text-ink-soft/60 mt-1">{s.label}</div>
               </div>
             </StaggerItem>

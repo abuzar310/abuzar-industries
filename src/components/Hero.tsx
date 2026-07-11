@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Shield, Truck, BadgeCheck } from "lucide-react";
 import HeroVideo from "./HeroVideo";
+import { WordReveal, ShineWrap } from "./motion/Patterns";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const fadeUp = {
@@ -56,17 +57,13 @@ export default function Hero() {
               <span className="eyebrow text-ochre">Chitradurga&apos;s Timber House</span>
             </motion.div>
 
-            <motion.h1
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={1}
-              className="t-display text-walnut"
-            >
-              Trusted Timber
+            <h1 className="t-display text-walnut">
+              <WordReveal text="Trusted Timber" />
               <br />
-              <span className="gold-text italic font-[500]">Specialists</span>
-            </motion.h1>
+              <span className="gold-text italic font-[500]">
+                <WordReveal text="Specialists" />
+              </span>
+            </h1>
 
             <motion.p
               variants={fadeUp}
@@ -87,21 +84,25 @@ export default function Hero() {
               custom={3}
               className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
             >
-              <a
-                href="/calculator"
-                className="sheen group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-walnut text-paper text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-walnut-2 active:scale-[0.98] shadow-[0_18px_40px_-18px_rgba(90,61,36,0.6)]"
-              >
-                Build a Quotation
-                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </a>
-              <a
-                href="https://wa.me/919845378626?text=Hi%20Abuzar%20Industries%2C%20I%20want%20to%20check%20timber%20prices%20and%20availability"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-8 py-4 rounded-full border border-walnut/25 text-ink-soft text-sm font-semibold tracking-wide transition-all duration-300 hover:border-walnut hover:text-walnut hover:bg-panel/60 active:scale-[0.98]"
-              >
-                WhatsApp Us
-              </a>
+              <ShineWrap className="rounded-full">
+                <a
+                  href="/calculator"
+                  className="relative z-10 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-walnut text-paper text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-walnut-2 active:scale-[0.98] shadow-[0_18px_40px_-18px_rgba(90,61,36,0.6)]"
+                >
+                  Build a Quotation
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              </ShineWrap>
+              <ShineWrap className="rounded-full">
+                <a
+                  href="https://wa.me/919845378626?text=Hi%20Abuzar%20Industries%2C%20I%20want%20to%20check%20timber%20prices%20and%20availability"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-10 inline-flex items-center px-8 py-4 rounded-full border border-walnut/25 text-ink-soft text-sm font-semibold tracking-wide transition-all duration-300 hover:border-walnut hover:text-walnut hover:bg-panel/60 active:scale-[0.98]"
+                >
+                  WhatsApp Us
+                </a>
+              </ShineWrap>
             </motion.div>
 
             {/* trust bar */}
