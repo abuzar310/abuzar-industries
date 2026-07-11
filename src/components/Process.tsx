@@ -32,7 +32,7 @@ export default function Process() {
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-walnut/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+        <div className="grid items-center gap-8 lg:gap-16 lg:grid-cols-2">
           {/* video */}
           <Reveal>
             <div className="relative aspect-video overflow-hidden rounded-3xl border border-walnut/10 shadow-lg">

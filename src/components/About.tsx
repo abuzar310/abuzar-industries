@@ -25,7 +25,7 @@ export default function About() {
       <div className="pointer-events-none absolute top-0 right-0 w-[30rem] h-[30rem] bg-walnut/4 rounded-full blur-3xl" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
           {/* Left */}
           <Reveal>
             <div className="relative">
@@ -99,10 +99,10 @@ export default function About() {
         </div>
 
         {/* Stats */}
-        <Stagger className="mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden bg-walnut/10 border border-walnut/10">
+        <Stagger className="mt-12 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden bg-walnut/10 border border-walnut/10">
           {stats.map((s) => (
             <StaggerItem key={s.label} className="h-full">
-              <div className="h-full bg-paper py-8 px-4 text-center transition-colors duration-300 hover:bg-panel/50">
+              <div className="h-full bg-paper py-5 sm:py-8 px-3 text-center transition-colors duration-300 hover:bg-panel/50">
                 <s.icon size={20} className="text-ochre mx-auto mb-3" strokeWidth={1.75} />
                 <div className="font-[family:var(--font-serif)] font-semibold text-3xl text-walnut"><AnimatedCounter from={0} to={s.to} suffix={s.suffix} /></div>
                 <div className="eyebrow text-[0.6rem] text-ink-soft/60 mt-1">{s.label}</div>

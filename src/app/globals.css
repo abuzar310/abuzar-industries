@@ -158,6 +158,33 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 }
 .sheen:hover::before { left: 130%; }
 
+/* ---- mobile-first: reduced spacing, bigger touch targets ---- */
+@media (max-width: 639px) {
+  section[id] { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+  #hero { padding-top: 5rem !important; padding-bottom: 4rem !important; }
+  .t-display { font-size: clamp(2rem, 9vw, 2.75rem) !important; }
+  .t-h2 { font-size: clamp(1.5rem, 7vw, 2rem) !important; }
+  .eyebrow { font-size: 0.6rem !important; }
+  .card-premium:hover { transform: none !important; }
+  .t-display br { display: none; }
+  .t-h2 br { display: none; }
+  .mt-20 { margin-top: 2.5rem !important; }
+  #hero > div:first-child { padding-top: 6rem !important; }
+  a, button, [role="button"] { min-height: 44px; min-width: 44px; }
+  input, select, textarea { min-height: 44px; font-size: 16px !important; }
+  .qh-card .qh-meta { grid-template-columns: 1fr !important; }
+  .qh-meta3 { grid-template-columns: 1fr !important; }
+  .qh-cell + .qh-cell { border-left: none !important; border-top: 1px solid rgba(90,61,36,0.12) !important; }
+  .qs-table thead { display: none; }
+  .qs-table tbody td { display: flex; justify-content: space-between; border: none; padding: 4px 0; }
+  .qs-table tbody td::before { content: attr(data-lab); font-weight: 600; color: var(--ink-soft); }
+  .qs-table tbody tr { display: block; padding: 8px 0; border-bottom: 1px solid rgba(90,61,36,0.12); }
+  .qsec { max-width: 100% !important; }
+}
+@media (max-width: 374px) {
+  .container { padding-left: 12px !important; padding-right: 12px !important; }
+}
+
 /* Grain texture overlay */
 .grain-overlay::after {
   content: '';

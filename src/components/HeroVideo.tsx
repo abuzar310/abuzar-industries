@@ -20,7 +20,7 @@ export default function HeroVideo() {
   }, []);
 
   return (
-    <div className="relative h-[360px] w-full sm:h-[440px] lg:h-[560px]">
+    <div className="relative h-[240px] w-full sm:h-[360px] lg:h-[520px]">
       {/* framed glass stage */}
       <div className="absolute inset-0 overflow-hidden rounded-[28px] border border-walnut/10 bg-gradient-to-br from-panel/80 via-paper/40 to-ochre-soft/30 shadow-[0_40px_90px_-40px_rgba(90,61,36,0.45)]">
         <video
