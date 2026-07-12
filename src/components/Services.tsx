@@ -32,7 +32,7 @@ const services = [
     n: "04",
     title: "Custom Dimension Cutting",
     desc: "Cut to exact Length × Width × Thickness. No waste, just fit — every plank to your spec.",
-    img: null,
+    img: "/images/custom-dimension-cutting.jpg",
   },
   {
     icon: Truck,
@@ -47,7 +47,7 @@ const services = [
     n: "06",
     title: "Instant WhatsApp Quoting",
     desc: "Use our calculator or message dimensions on WhatsApp — a professional quote within minutes.",
-    img: null,
+    img: "/images/instant-whatsapp-quote.png",
   },
 ];
 
