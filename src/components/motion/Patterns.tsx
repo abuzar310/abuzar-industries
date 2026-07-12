@@ -54,16 +54,17 @@ export function AnimatedCounter({
 
 /* ── 3. Word-by-word heading ── */
 export function WordReveal({ text, className }: { text: string; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
   const words = text.split(" ");
   return (
-    <span className={className}>
+    <span ref={ref} className={className}>
       {words.map((w, i) => (
         <span key={i} className="inline-block overflow-hidden leading-[1.15]">
           <motion.span
             className="inline-block"
             initial={{ y: "110%", opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, margin: "-8% 0px" }}
+            animate={inView ? { y: 0, opacity: 1 } : { y: "110%", opacity: 0 }}
             transition={{ duration: 0.6, delay: i * 0.04, ease: EASE }}
           >
             {w}
