@@ -39,8 +39,8 @@ export default function ContactContent() {
       <section className="py-12 sm:py-16 bg-pattern">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-semibold tracking-wider uppercase mb-6">
@@ -64,8 +64,8 @@ export default function ContactContent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Contact cards */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, transform: "translateX(-20px) scale(0.97)" }}
+              animate={{ opacity: 1, transform: "translateX(0px) scale(1)" }}
               transition={{ delay: 0.15 }}
               className="space-y-4"
             >
@@ -118,8 +118,8 @@ export default function ContactContent() {
 
             {/* Contact form */}
             <motion.form
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, transform: "translateX(20px) scale(0.97)" }}
+              animate={{ opacity: 1, transform: "translateX(0px) scale(1)" }}
               transition={{ delay: 0.25 }}
               onSubmit={(e) => {
                 e.preventDefault();
@@ -155,7 +155,7 @@ export default function ContactContent() {
                     type="text"
                     required
                     placeholder="e.g. Rajesh"
-                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
+                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30"
                   />
                 </div>
                 <div>
@@ -170,7 +170,7 @@ export default function ContactContent() {
                     name="phone"
                     type="tel"
                     placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
+                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30"
                   />
                 </div>
                 <div>
@@ -186,12 +186,12 @@ export default function ContactContent() {
                     required
                     rows={5}
                     placeholder="Tell us about your wood requirement..."
-                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30 resize-none"
+                    className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30 resize-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-green text-paper text-sm font-semibold hover:bg-green/90 transition-all active:scale-[0.97]"
+                  className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-green text-paper text-sm font-semibold hover:bg-green/90 transition-[background,transform] pressable"
                 >
                   <Send size={16} />
                   Send via WhatsApp

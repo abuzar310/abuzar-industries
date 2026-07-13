@@ -8,10 +8,10 @@ import { WordReveal, ShineWrap } from "./motion/Patterns";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, transform: "translateY(28px)" },
   visible: (i = 0) => ({
     opacity: 1,
-    y: 0,
+    transform: "translateY(0px)",
     transition: { duration: 0.85, delay: 0.15 + i * 0.11, ease: EASE },
   }),
 };
@@ -33,7 +33,7 @@ export default function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-dvh flex items-center overflow-hidden grain-overlay"
+      className="relative min-h-[100dvh] flex items-center overflow-hidden grain-overlay"
     >
       {/* warm depth field */}
       <div className="absolute inset-0 pointer-events-none">
@@ -42,7 +42,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(rgba(90,61,36,0.05)_0.6px,transparent_0.6px)] [background-size:26px_26px] opacity-60" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 lg:py-28">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 sm:pt-20 sm:pb-16 lg:py-28">
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           {/* ---------- Left: copy ---------- */}
           <motion.div style={{ y: copyY, opacity: fade }} className="text-center lg:text-left">
@@ -58,10 +58,10 @@ export default function Hero() {
             </motion.div>
 
             <h1 className="t-display text-walnut">
-              <WordReveal text="Trusted Timber" />
+              <WordReveal text="Premium Timber," />
               <br />
               <span className="gold-text italic font-[500]">
-                <WordReveal text="Specialists" />
+                <WordReveal text="Cut Your Way" />
               </span>
             </h1>
 
@@ -87,7 +87,7 @@ export default function Hero() {
               <ShineWrap className="rounded-full">
                 <a
                   href="/calculator"
-                  className="relative z-10 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-walnut text-paper text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-walnut-2 active:scale-[0.98] shadow-[0_18px_40px_-18px_rgba(90,61,36,0.6)]"
+                  className="relative z-10 inline-flex items-center gap-2 px-10 py-4.5 rounded-full bg-walnut text-paper text-sm font-semibold tracking-wide transition-[background] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-walnut-2 pressable shadow-[0_20px_50px_-20px_rgba(90,61,36,0.7)]"
                 >
                   Build a Quotation
                   <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
@@ -98,7 +98,7 @@ export default function Hero() {
                   href="https://wa.me/919845378626?text=Hi%20Abuzar%20Industries%2C%20I%20want%20to%20check%20timber%20prices%20and%20availability"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative z-10 inline-flex items-center px-8 py-4 rounded-full border border-walnut/25 text-ink-soft text-sm font-semibold tracking-wide transition-all duration-300 hover:border-walnut hover:text-walnut hover:bg-panel/60 active:scale-[0.98]"
+                  className="relative z-10 inline-flex items-center px-6 py-3 rounded-full border border-walnut/15 text-ink-soft/50 text-xs font-semibold tracking-wide transition-[border-color,color,background,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-walnut hover:text-walnut hover:bg-panel/60 pressable"
                 >
                   WhatsApp Us
                 </a>
@@ -128,8 +128,8 @@ export default function Hero() {
           {/* ---------- Right: cinematic timber video ---------- */}
           <motion.div
             style={{ y: videoY }}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, transform: "scale(0.95)" }}
+            animate={{ opacity: 1, transform: "scale(1)" }}
             transition={{ duration: 1, delay: 0.35, ease: EASE }}
           >
             <HeroVideo />

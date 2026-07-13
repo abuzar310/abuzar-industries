@@ -4,9 +4,12 @@ const year = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="bg-walnut text-paper/80">
+    <footer className="bg-walnut text-paper/80 relative overflow-hidden">
+      {/* warm grain overlay */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{ backgroundImage: "radial-gradient(circle at 50% 0%, #C79A4B 0.5px, transparent 0.5px)", backgroundSize: "24px 24px" }} />
       {/* warm gold top edge */}
-      <div className="h-px bg-gradient-to-r from-transparent via-[#C79A4B]/50 to-transparent" />
+      <div className="relative h-px bg-gradient-to-r from-transparent via-[#C79A4B]/50 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -55,7 +58,8 @@ export default function Footer() {
                 <MapPin size={15} className="mt-0.5 shrink-0 text-ochre" strokeWidth={1.75} />
                 <span>
                   KSSIDC Industrial Area, DVG Road<br />
-                  Chitradurga, Karnataka — 577501
+                  Chitradurga, Karnataka — 577501<br />
+                  <span className="text-[11px] text-paper/35">Near Chitradurga Fort — 2 km from bus stand</span>
                 </span>
               </li>
               <li>

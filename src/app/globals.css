@@ -53,12 +53,19 @@ body {
 h1, h2, h3 {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em; /* tight tracking for display sizes — Apple §15 */
 }
 
 /* fluid display type scale */
-.t-display { font-size: clamp(2.75rem, 7vw, 6rem); line-height: 0.98; font-weight: 600; }
-.t-h2 { font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.05; font-weight: 600; }
+.t-display { font-size: clamp(2.75rem, 7vw, 6rem); line-height: 0.95; font-weight: 600; letter-spacing: -0.025em; }
+.t-h2 { font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.05; font-weight: 600; letter-spacing: -0.022em; }
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
 .eyebrow {
   font-family: var(--font-display);
   font-weight: 600;
@@ -97,6 +104,33 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   background-size: 22px 22px;
 }
 
+/* — apple: glass material — */
+.glass-panel {
+  background: rgba(250, 246, 239, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.glass-panel-dark {
+  background: rgba(36, 27, 18, 0.55);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* — apple: press feedback (instant, sub-100ms) — */
+.pressable {
+  transition: transform 100ms ease-out;
+}
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* — apple: typography tracking per size — */
+@media (max-width: 639px) {
+  .t-display { letter-spacing: -0.015em !important; }
+}
+
 /* Frosted glass panel */
 .glass {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(243, 236, 224, 0.35));
@@ -133,14 +167,14 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 .hairline { height: 1px; background: linear-gradient(90deg, transparent, rgba(90,61,36,0.25), transparent); }
 .rule-gold { height: 1px; width: 64px; background: linear-gradient(90deg, var(--gold), transparent); }
 .card-premium {
-  background: linear-gradient(180deg, #FCF9F3, #F6EFE3);
+  background: linear-gradient(180deg, rgba(252, 249, 243, 0.9), rgba(246, 239, 227, 0.9));
   border: 1px solid rgba(90, 61, 36, 0.10);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 .card-premium:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: rgba(199, 154, 75, 0.45);
 }
@@ -161,11 +195,15 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
 /* ---- mobile-first: reduced spacing, bigger touch targets ---- */
 @media (max-width: 639px) {
   section[id] { padding-top: 3rem !important; padding-bottom: 3rem !important; }
-  #hero { padding-top: 5rem !important; padding-bottom: 4rem !important; }
+  #hero { padding-top: 3rem !important; padding-bottom: 2rem !important; }
   .t-display { font-size: clamp(2rem, 9vw, 2.75rem) !important; }
   .t-h2 { font-size: clamp(1.5rem, 7vw, 2rem) !important; }
   .eyebrow { font-size: 0.6rem !important; }
   .card-premium:hover { transform: none !important; }
+  .group:hover .group-hover\:scale-105 { transform: none !important; }
+  .group:hover .group-hover\:rotate-\[-4deg\] { transform: none !important; }
+  .hover\:-translate-y-1:hover { transform: none !important; }
+  .hover\:scale-\[1\.06\]:hover { transform: none !important; }
   .t-display br { display: none; }
   .t-h2 br { display: none; }
   .mt-20 { margin-top: 2.5rem !important; }

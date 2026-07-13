@@ -46,8 +46,8 @@ export default function Preloader() {
               src="/images/logo-brand-512.png"
               alt="Abuzar Industries"
               className="w-24 h-24 object-contain drop-shadow-[0_10px_30px_rgba(199,154,75,0.35)]"
-              initial={{ opacity: 0, scale: 0.82, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, transform: "scale(0.82) translateY(8px)" }}
+              animate={{ opacity: 1, transform: "scale(1) translateY(0px)" }}
               transition={{ duration: 0.9, ease: EASE }}
             />
 
@@ -55,8 +55,8 @@ export default function Preloader() {
             <div className="overflow-hidden">
               <motion.p
                 className="font-[family:var(--font-serif)] text-2xl sm:text-3xl text-paper tracking-tight"
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
+                initial={{ transform: "translateY(110%)" }}
+                animate={{ transform: "translateY(0%)" }}
                 transition={{ duration: 0.8, delay: 0.35, ease: EASE }}
               >
                 Abuzar <span className="gold-text">Industries</span>
@@ -68,7 +68,7 @@ export default function Preloader() {
               className="h-px w-40 origin-left bg-gradient-to-r from-transparent via-[#C79A4B] to-transparent"
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 1.4, delay: 0.5, ease: EASE }}
+              transition={{ duration: 1.0, delay: 0.5, ease: EASE }}
             />
             <motion.span
               className="eyebrow text-[#C79A4B]/70"

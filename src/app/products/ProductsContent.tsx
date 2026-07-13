@@ -3,6 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+import { Stagger, StaggerItem } from "../../components/motion/Reveal";
 import Image from "next/image";
 import VideoFrame from "@/components/VideoFrame";
 import {
@@ -104,8 +105,8 @@ export default function ProductsContent() {
       <section className="py-16 sm:py-20 bg-pattern">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-semibold tracking-wider uppercase mb-6">
@@ -127,15 +128,10 @@ export default function ProductsContent() {
       {/* Product cards */}
       <section className="py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {products.map((p, i) => (
-              <motion.div
-                key={p.name}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.1 }}
-                className="group rounded-2xl bg-paper border border-walnut/5 hover:border-ochre/20 hover:shadow-xl hover:shadow-ochre/5 transition-all duration-300 overflow-hidden"
+          <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {products.map((p) => (
+              <StaggerItem key={p.name}>
+              <div className="group rounded-2xl bg-paper border border-walnut/5 hover:border-ochre/20 hover:shadow-xl hover:shadow-ochre/5 transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden"
               >
                 {/* Image / 3D */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-panel/60 to-ochre-soft/20">
@@ -162,7 +158,7 @@ export default function ProductsContent() {
                       src={p.image}
                       alt={p.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
                     />
                   )}
 
@@ -230,9 +226,10 @@ export default function ProductsContent() {
                     </a>
                   </div>
                 </div>
-              </motion.div>
+              </div>
+            </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
@@ -240,8 +237,8 @@ export default function ProductsContent() {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             viewport={{ once: true, margin: "-40px" }}
             className="rounded-3xl bg-panel/60 border border-walnut/5 p-8 sm:p-12"
           >
@@ -270,7 +267,7 @@ export default function ProductsContent() {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="/calculator"
-              className="px-8 py-3.5 rounded-xl bg-walnut text-paper font-semibold text-sm hover:bg-walnut-2 transition-all active:scale-[0.97] shadow-lg shadow-walnut/20"
+              className="px-8 py-3.5 rounded-xl bg-walnut text-paper font-semibold text-sm hover:bg-walnut-2 transition-[background,transform] pressable shadow-lg shadow-walnut/20"
             >
               Try Price Calculator
             </a>
@@ -278,7 +275,7 @@ export default function ProductsContent() {
               href={`https://wa.me/${PHONE}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-xl bg-green text-paper font-semibold text-sm hover:bg-green/90 transition-all active:scale-[0.97]"
+              className="px-8 py-3.5 rounded-xl bg-green text-paper font-semibold text-sm hover:bg-green/90 transition-[background,transform] pressable"
             >
               WhatsApp Us
             </a>

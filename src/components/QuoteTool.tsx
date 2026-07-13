@@ -139,7 +139,7 @@ export default function QuoteTool() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Rajesh"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30"
               />
             </div>
             <div>
@@ -151,7 +151,7 @@ export default function QuoteTool() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30"
               />
             </div>
             <div>
@@ -165,7 +165,7 @@ export default function QuoteTool() {
                   onChange={(e) => setWoodType(e.target.value)}
                   placeholder="e.g. Ghana Teak"
                   list="woods"
-                  className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink placeholder:text-ink-soft/30"
+                  className="w-full px-3.5 py-2.5 text-sm rounded-xl bg-panel border border-walnut/10 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink placeholder:text-ink-soft/30"
                 />
                 <datalist id="woods">
                   {COMMON_WOODS.map((w) => (
@@ -219,6 +219,7 @@ export default function QuoteTool() {
                 </tr>
               </thead>
               <tbody>
+                <AnimatePresence>
                 {rows.map((r) => {
                   const l = parseFloat(r.l) || 0;
                   const w = parseFloat(r.w) || 0;
@@ -226,7 +227,14 @@ export default function QuoteTool() {
                   const p = parseInt(r.pcs) || 0;
                   const cft = l && w && t && p ? calcCft(l, w, t, p) : "—";
                   return (
-                    <tr key={r.id} className="border-t border-walnut/5">
+                    <motion.tr
+                      key={r.id}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
+                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                      className="border-t border-walnut/5 overflow-hidden"
+                    >
                       <td className="py-2 pr-2 text-ink-soft/40 font-mono text-xs">
                         {r.id}
                       </td>
@@ -236,7 +244,7 @@ export default function QuoteTool() {
                           inputMode="decimal"
                           value={r.l}
                           onChange={(e) => updateRow(r.id, "l", e.target.value)}
-                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink font-mono text-sm"
+                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink font-mono text-sm"
                         />
                       </td>
                       <td className="py-2 pr-2">
@@ -245,7 +253,7 @@ export default function QuoteTool() {
                           inputMode="decimal"
                           value={r.w}
                           onChange={(e) => updateRow(r.id, "w", e.target.value)}
-                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink font-mono text-sm"
+                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink font-mono text-sm"
                         />
                       </td>
                       <td className="py-2 pr-2">
@@ -254,7 +262,7 @@ export default function QuoteTool() {
                           inputMode="decimal"
                           value={r.t}
                           onChange={(e) => updateRow(r.id, "t", e.target.value)}
-                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink font-mono text-sm"
+                          className="w-16 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink font-mono text-sm"
                         />
                       </td>
                       <td className="py-2 pr-2">
@@ -265,7 +273,7 @@ export default function QuoteTool() {
                           onChange={(e) =>
                             updateRow(r.id, "pcs", e.target.value)
                           }
-                          className="w-14 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-all text-ink font-mono text-sm"
+                          className="w-14 px-2 py-1.5 rounded-lg bg-panel border border-walnut/5 focus:border-ochre/40 focus:ring-2 focus:ring-ochre/10 outline-none transition-[border-color,box-shadow] text-ink font-mono text-sm"
                         />
                       </td>
                       <td className="py-2 pr-2 text-right font-mono text-sm text-ink-soft">
@@ -280,9 +288,10 @@ export default function QuoteTool() {
                           <Trash2 size={14} />
                         </button>
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
+                </AnimatePresence>
               </tbody>
             </table>
           </div>
@@ -294,18 +303,30 @@ export default function QuoteTool() {
                 <span className="text-xs text-ink-soft/60 font-semibold tracking-wider uppercase">
                   Total CFT
                 </span>
-                <div className="font-[family:var(--font-display)] font-bold text-2xl text-walnut">
+                <motion.div
+                  key={totalCft}
+                  initial={{ scale: 1 }}
+                  animate={{ scale: [1, 1.06, 1] }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="font-[family:var(--font-display)] font-bold text-2xl text-walnut"
+                >
                   {totalCft.toFixed(2)}
-                </div>
+                </motion.div>
               </div>
               {totalCft > 0 && (
                 <div>
                   <span className="text-xs text-ink-soft/60 font-semibold tracking-wider uppercase">
                     Est. Price*
                   </span>
-                  <div className="font-[family:var(--font-display)] font-bold text-2xl text-ochre">
+                  <motion.div
+                    key={`price-${estimate}`}
+                    initial={{ scale: 1 }}
+                    animate={{ scale: [1, 1.04, 1] }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="font-[family:var(--font-display)] font-bold text-2xl text-ochre"
+                  >
                     ₹{estimate.toLocaleString("en-IN")}
-                  </div>
+                  </motion.div>
                   <span className="text-[10px] text-ink-soft/40">
                     * ₹2,600/CFT estimate. Final price depends on wood type.
                   </span>
@@ -316,7 +337,7 @@ export default function QuoteTool() {
             <button
               onClick={sendWhatsApp}
               disabled={!rows.some((r) => r.l && r.w && r.t)}
-              className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-green text-paper text-sm font-semibold hover:bg-green/90 transition-all active:scale-[0.97] disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg shadow-green/20"
+              className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-green text-paper text-sm font-semibold hover:bg-green/90 transition-[background,transform] pressable disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg shadow-green/20"
             >
               <Send size={16} />
               Send on WhatsApp

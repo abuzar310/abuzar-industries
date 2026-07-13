@@ -29,8 +29,8 @@ export default function AboutContent() {
       <section className="py-16 sm:py-20 bg-pattern relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-semibold tracking-wider uppercase mb-6">
@@ -54,8 +54,8 @@ export default function AboutContent() {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             viewport={{ once: true, margin: "-60px" }}
             className="bg-paper border border-walnut/5 rounded-3xl shadow-lg shadow-walnut/5 p-8 lg:p-12"
           >
@@ -137,8 +137,8 @@ export default function AboutContent() {
       <section className="py-16 bg-panel/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             viewport={{ once: true, margin: "-60px" }}
             className="text-center mb-12"
           >
@@ -154,11 +154,11 @@ export default function AboutContent() {
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, transform: "translateY(20px)" }}
+                whileInView={{ opacity: 1, transform: "translateY(0px)" }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-2xl bg-paper border border-walnut/5 text-center hover:border-ochre/20 hover:shadow-lg hover:shadow-ochre/5 transition-all"
+                className="p-8 rounded-2xl bg-paper border border-walnut/5 text-center hover:border-ochre/20 hover:shadow-lg hover:shadow-ochre/5 transition-[border-color,box-shadow]"
               >
                 <div className="w-14 h-14 rounded-2xl bg-ochre/10 flex items-center justify-center mx-auto mb-4">
                   <v.icon size={24} className="text-ochre" />
@@ -179,8 +179,8 @@ export default function AboutContent() {
       <section className="py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translateY(20px) scale(0.97)" }}
+            whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
             viewport={{ once: true, margin: "-40px" }}
             className="rounded-3xl bg-gradient-to-r from-walnut to-walnut-2 p-10 sm:p-14 text-center relative overflow-hidden"
           >
@@ -197,19 +197,19 @@ export default function AboutContent() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
                   href="/calculator"
-                  className="px-8 py-3.5 rounded-xl bg-paper text-walnut font-semibold text-sm hover:bg-ochre-soft transition-all active:scale-[0.97]"
+                  className="px-8 py-3.5 rounded-xl bg-paper text-walnut font-semibold text-sm hover:bg-ochre-soft transition-[background,transform] pressable"
                 >
                   Get Quote
                 </a>
                 <a
                   href="/contact"
-                  className="px-8 py-3.5 rounded-xl border border-paper/30 text-paper font-semibold text-sm hover:bg-paper/10 transition-all active:scale-[0.97]"
+                  className="px-8 py-3.5 rounded-xl border border-paper/30 text-paper font-semibold text-sm hover:bg-paper/10 transition-[background,transform] pressable"
                 >
                   Contact Us
                 </a>
                 <a
                   href="/products"
-                  className="px-8 py-3.5 rounded-xl border border-paper/30 text-paper font-semibold text-sm hover:bg-paper/10 transition-all active:scale-[0.97]"
+                  className="px-8 py-3.5 rounded-xl border border-paper/30 text-paper font-semibold text-sm hover:bg-paper/10 transition-[background,transform] pressable"
                 >
                   View Products
                 </a>

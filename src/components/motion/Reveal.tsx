@@ -23,10 +23,10 @@ export function Reveal({
   return (
     <M
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, transform: `translateY(${y}px) scale(0.97)` }}
+      whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
       viewport={{ once: true, margin: "-12% 0px -8% 0px" }}
-      transition={{ duration: 0.8, delay, ease: EASE }}
+      transition={{ duration: 0.6, delay, ease: EASE }}
     >
       {children}
     </M>
@@ -38,8 +38,8 @@ const parent: Variants = {
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
 };
 const child: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+  hidden: { opacity: 0, transform: "translateY(24px) scale(0.97)" },
+  show: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 0.7, ease: EASE } },
 };
 
 /** Wrap a group; each <Stagger.Item> reveals in sequence. */

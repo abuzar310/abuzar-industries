@@ -85,7 +85,7 @@ export default function Products() {
             Three species, <span className="gold-text italic">one standard</span>
           </h2>
           <p className="mt-4 text-ink-soft/80 text-sm sm:text-base leading-relaxed max-w-xl">
-            Standard and custom dimensions, seasoned and cut to spec — delivered across Karnataka.
+            The finest teak, white teak and neem wood in Chitradurga — seasoned at our KSSIDC yard and delivered across Karnataka.
           </p>
         </Reveal>
 

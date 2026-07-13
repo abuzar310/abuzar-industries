@@ -63,9 +63,9 @@ export function WordReveal({ text, className }: { text: string; className?: stri
         <span key={i} className="inline-block overflow-hidden leading-[1.15]">
           <motion.span
             className="inline-block"
-            initial={{ y: "110%", opacity: 0 }}
-            animate={inView ? { y: 0, opacity: 1 } : { y: "110%", opacity: 0 }}
-            transition={{ duration: 0.6, delay: i * 0.04, ease: EASE }}
+            initial={{ transform: "translateY(110%)", opacity: 0 }}
+            animate={inView ? { transform: "translateY(0%)", opacity: 1 } : { transform: "translateY(110%)", opacity: 0 }}
+            transition={{ duration: 0.45, delay: i * 0.03, ease: EASE }}
           >
             {w}
             {i < words.length - 1 ? " " : ""}
