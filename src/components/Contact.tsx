@@ -132,7 +132,7 @@ export default function Contact() {
         <Reveal className="mt-14 max-w-5xl mx-auto px-4 sm:px-6">
           <div className="rounded-2xl overflow-hidden border border-walnut/10 shadow-md">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5000!2d76.38635!3d14.22648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sAbuzar%20Industries!5e0!3m2!1sen!2sin!4v1"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1940!2d76.3906535!3d14.2304243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bba75de8a42ad97%3A0x9a8be15dab4a6208!2sABUZAR%20INDUSTRIES!5e0!3m2!1sen!2sin!4v1"
               width="100%"
               height="280"
               style={{ border: 0 }}
