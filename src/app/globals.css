@@ -659,3 +659,7 @@ a, button, [role="button"], [role="switch"], summary, label[for] { cursor: point
   .q-stamp { font-size: 10px; padding: 4px 10px; }
   .qt-grand .qt-val { font-size: 22px; }
 }
+
+/* social icon links */
+.soc-link { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(250,246,239,.12); color: rgba(250,246,239,.3); transition: .2s; }
+.soc-link:hover { color: var(--paper); border-color: var(--ochre); background: rgba(185,119,46,.1); }
